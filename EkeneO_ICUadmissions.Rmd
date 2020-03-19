@@ -1,0 +1,488 @@
+---
+title: "Ekene Olatunji: Group project, eH705"
+author: "Ekene Olatunji"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document: 
+    number_sections: TRUE
+    code_folding: hide
+    toc: yes
+    toc_float: 
+      toc_collapsed: true
+    includes:
+      after_body: 
+    theme: journal
+    fig_height: 4
+    fig_width: 4
+    fig_align: center
+    font_family: Times New Roman, Times, serif
+    font_size: 2.5em
+    linestretch: 1.5
+---
+
+```{r setup, eval=TRUE, include=FALSE}  
+knitr::opts_chunk$set( comment=NA, eval=TRUE,  echo=TRUE, warning=FALSE, message=FALSE, error=FALSE, root.dir = "C:/Users/ekene/OneDrive - McMaster University/Avenue2Learn_Winter2020/EH 705/eh705termproject") 
+pacman::p_load(psych, ggplot2, DT, sjPlot, knitr, DescTools,
+               ggcorrplot, qgraph, corrr, tidyverse, Hmisc )
+```
+
+```{r echo=FALSE}
+# include this code chunk as-is to set options
+knitr::opts_chunk$set(comment=NA, prompt=TRUE, out.width=750, fig.height=8, fig.width=8)
+library(Rcmdr)
+library(car)
+library(RcmdrMisc)
+```
+
+
+```{r echo=FALSE}
+# include this code chunk as-is to enable 3D graphs
+library(rgl)
+knitr::knit_hooks$set(webgl = hook_webgl)
+```
+
+# About the Dataset
+
+Description: The data consist of 200 subjects from a larger study on the survival of patients following admission to an adult intensive care unit (ICU). The study used logistic regression to predict the probability of survival for these patients until their discharge from the hospital. The dependent variable is the binary variable Vital Status (STA). Nineteen possible predictor variables, both discrete and continuous, were also observed. 
+Number of cases: 200 
+Variable Names: 
+
+  1.	ID: ID number of the patient 
+  2.	STA: Vital status (0 = Lived, 1 = Died) 
+  3.	AGE: Patient's age in years 
+  4.	SEX: Patient's sex (0 = Male, 1 = Female) 
+  5.	RACE: Patient's race (1 = White, 2 = Black, 3 = Other) 
+  6.	SER: Service at ICU admission (0 = Medical, 1 = Surgical) 
+  7.	CAN: Is cancer part of the present problem? (0 = No, 1 = Yes) 
+  8.	CRN: History of chronic renal failure (0 = No, 1 = Yes) 
+  9.	INF: Infection probable at ICU admission (0 = No, 1 = Yes) 
+  10.	CPR: CPR prior to ICU admission (0 = No, 1 = Yes) 
+  11.	SYS: Systolic blood pressure at ICU admission (in mm Hg) 
+  12.	HRA: Heart rate at ICU admission (beats/min) 
+  13.	PRE: Previous admission to an ICU within 6 months (0 = No, 1 = Yes) 
+  14.	TYP: Type of admission (0 = Elective, 1 = Emergency) 
+  15.	FRA: Long bone, multiple, neck, single area, or hip fracture (0 = No, 1 = Yes) 
+  16.	PO2: PO2 from initial blood gases (0 = >60, 1 = ²60) 
+  17.	PH: PH from initial blood gases (0 = ³7.25, 1 <7.25) 
+  18.	PCO: PCO2 from initial blood gases (0 = ²45, 1 = >45) 
+  19.	BIC: Bicarbonate from initial blood gases (0 = ³18, 1 = <18) 
+  20.	CRE: Creatinine from initial blood gases (0 = ²2.0, 1 = >2.0) 
+  21.	LOC: Level of consciousness at admission (0 = no coma or stupor, 1= deep stupor, 2 = coma) 
+
+
+# Reading in the Data set
+```{r}
+ICU <- read.table("C:/Users/ekene/OneDrive - McMaster University/Avenue2Learn_Winter2020/EH 705/eh705termproject/ICUAdmissions.csv", header=TRUE, sep=",", na.strings="NA", dec=".", strip.white=TRUE)
+```
+
+```{r}
+str(ICU)
+```
+
+# Statistical Summary of the dataset variables
+```{r}
+summary(ICU)
+```
+
+## Observation
+From the ICU Admissions dataset, I made the following observations;
+  1. Most of the variables are integer but from information about the data, most of the variables can be recoded to factor variables.
+  2. There are only four variables that can be left as numerical variables others can be recoded to categorical/factor variables
+  2. There would be a need to recode the categorical variables to factors.
+  3. The dependent variable is the binary variable Vital Status (Status). 
+  4. Nineteen possible predictor variables, both discrete and continuous, were also observed. 
+  5. There are no missing data
+  
+
+# Converting Numerical variables to Factor Variables
+
+Labelling teh factor levels helps with comparative analysis and visualization
+
+```{r}
+ICU <- within(ICU, {
+  Status <- factor(Status, labels=c('Lived','Died'))
+})
+ICU <- within(ICU, {
+  Sex <- factor(Sex, labels=c('Male','Female'))
+})
+ICU <- within(ICU, {
+  Race <- factor(Race, labels=c('White','Black','Other'))
+})
+ICU <- within(ICU, {
+  Service <- factor(Service, labels=c('Medical','Surgical'))
+})
+ICU <- within(ICU, {
+  Cancer <- factor(Cancer, labels=c('No','Yes'))
+})
+ICU <- within(ICU, {
+  Renal <- factor(Renal, labels=c('No','Yes'))
+})
+ICU <- within(ICU, {
+  Infection <- factor(Infection, labels=c('No','Yes'))
+})
+ICU <- within(ICU, {
+  CPR <- factor(CPR, labels=c('No','Yes'))
+})
+ICU <- within(ICU, {
+  Previous <- factor(Previous, labels=c('No','Yes'))
+})
+ICU <- within(ICU, {
+  Type <- factor(Type, labels=c('Elective','Emergency'))
+})
+ICU <- within(ICU, {
+  Fracture <- factor(Fracture, labels=c('No','Yes'))
+})
+ICU <- within(ICU, {
+  PCO2 <- factor(PCO2, labels=c('No','Yes'))
+})
+ICU <- within(ICU, {
+  PH <- factor(PH, labels=c('No','Yes'))
+})
+ICU <- within(ICU, {
+  PO2 <- factor(PO2, labels=c('No','Yes'))
+})
+ICU <- within(ICU, {
+  Bicarbonate <- factor(Bicarbonate, labels=c('No','Yes'))
+})
+ICU <- within(ICU, {
+  Creatinine <- factor(Creatinine, labels=c('No','Yes'))
+})
+ICU <- within(ICU, {
+  Consciousness <- factor(Consciousness, labels=c('Conscious','Deep Stupor','Coma'))
+})
+```
+
+# Viewing a few rows of the recorded dataset
+```{r}
+headTail(ICU) %>% datatable(rownames = TRUE, filter="top", options = list(pageLenght = 10, scrollX=T))%>% formatRound(columns=c(1:17), digits=0)
+```
+
+# Saving new recoded dataset
+```{r}
+# write.csv(ICU, file="ICUAdmissions_recoded.csv", row.names=FALSE)
+```
+
+# Data Exploration - Statistical summaries and Graphing of variables
+
+## Statistical summary of the recoded dataset
+```{r}
+summary(ICU)
+```
+
+```{r}
+str(ICU)
+```
+
+## Numerical Summary of Int VAriables
+```{r}
+numSummary(ICU[,c("Age", "HeartRate", "Systolic"), drop=FALSE], statistics=c("mean", "sd", "IQR", 
+  "quantiles"), quantiles=c(0,.25,.5,.75,1))
+```
+
+# Graphing
+
+## Plotting the frequency distributon of all factor variables to Status
+```{r}
+p01<-ggplot(ICU, aes(x=Sex )) +
+ geom_bar( fill="pink" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-5, label="Base=200",  size=4, color="black" )  
+
+p02<-ggplot(ICU, aes(x=Race )) +
+ geom_bar( fill="lightblue" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4) 
+ 
+p03<-ggplot(ICU, aes(x=Service )) +
+ geom_bar( fill="blue" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p04 <- ggplot(ICU, aes(x=Cancer )) +
+ geom_bar( fill="Green" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p05 <- ggplot(ICU, aes(x=Renal )) +
+ geom_bar( fill="Orange" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p06 <- ggplot(ICU, aes(x=Infection )) +
+ geom_bar( fill="Red" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p07 <- ggplot(ICU, aes(x=CPR )) +
+ geom_bar( fill="Yellow" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+ 
+p08 <- ggplot(ICU, aes(x=Previous )) +
+ geom_bar( fill="Purple" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+library(Rmisc)
+multiplot(p01, p02, p03, p04, p05, p06, p07, p08,  layout=matrix(c(1:8), nrow=4, byrow=TRUE))
+```
+
+```{r}
+p09<-ggplot(ICU, aes(x=Type )) +
+ geom_bar( fill="pink" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-5, label="Base=200",  size=4, color="black" )
+
+p10<-ggplot(ICU, aes(x=Fracture )) +
+ geom_bar( fill="lightblue" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p11<-ggplot(ICU, aes(x=PO2 )) +
+ geom_bar( fill="blue" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p12 <- ggplot(ICU, aes(x=PH )) +
+ geom_bar( fill="Green" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p13 <- ggplot(ICU, aes(x=PCO2 )) +
+ geom_bar( fill="Orange" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p14 <- ggplot(ICU, aes(x=Bicarbonate )) +
+ geom_bar( fill="Red" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p15 <- ggplot(ICU, aes(x=Creatinine )) +
+ geom_bar( fill="Yellow" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+ 
+p16 <- ggplot(ICU, aes(x=Consciousness )) +
+ geom_bar( fill="Purple" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+library(Rmisc)
+multiplot(p09, p10, p11, p12, p13, p14, p15, p16, layout=matrix(c(1:8), nrow=4, byrow=TRUE))
+```
+
+## Distribution of Vital Status by the factor variables
+```{r}
+library(ggplot2)
+f01<-ggplot(ICU, aes(x=Sex, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by Sex")
+
+f02<-ggplot(ICU, aes(x=Race, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by Race")
+f03<-ggplot(ICU, aes(x=Service, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by Service")
+
+f04<-ggplot(ICU, aes(x=Cancer, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by Cancer")
+
+library(Rmisc)
+multiplot(f01, f02, f03, f04,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
+```
+
+```{r}
+
+f05<-ggplot(ICU, aes(x=Renal, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by Renal")
+
+f06<-ggplot(ICU, aes(x=Infection, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by Infection")
+
+f07<-ggplot(ICU, aes(x=CPR, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by CPR")
+
+f08<-ggplot(ICU, aes(x=Previous, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by Previous")
+
+library(Rmisc)
+multiplot(f05, f06, f07, f08,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
+``` 
+
+```{r}
+
+f09<-ggplot(ICU, aes(x=Type, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by Type")
+
+f10<-ggplot(ICU, aes(x=Fracture, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by Fracture")
+
+f11<-ggplot(ICU, aes(x=PO2, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by PO2")
+
+f12<-ggplot(ICU, aes(x=PH, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by PH")
+
+library(Rmisc)
+multiplot(f09, f10, f11, f12,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
+```
+
+```{r}
+f13<-ggplot(ICU, aes(x=PCO2, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by PCO2")
+
+f14<-ggplot(ICU, aes(x=Bicarbonate, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by Bicarbonate")
+
+f15<-ggplot(ICU, aes(x=Creatinine, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by Creatinine")
+
+f16<-ggplot(ICU, aes(x=Consciousness, fill = Status)) +
+ theme_bw() +
+ geom_bar() +
+ labs(y = "Patient Count",
+      title = "Vital Status by Consciousness")
+
+
+library(Rmisc)
+multiplot(f13, f14, f15, f16, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
+```
+
+
+
+## Plotting the density Distribution of the Numeric Variable
+
+```{r}
+d01 <- ggplot(ICU, aes(x=Age)) +
+ geom_density(fill="green") +
+ ggtitle("Age") +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=0.8, y=-0.001, label="Base=315",  size=4)
+
+d02 <- ggplot(ICU, aes(x=Systolic)) +
+ geom_density(fill="green") +
+ ggtitle("Systolic") +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=0.8, y=-0.001, label="Base=315",  size=4)
+
+d03 <- ggplot(ICU, aes(x=HeartRate)) +
+ geom_density(fill="green") +
+ ggtitle("HeartRate") +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=0.8, y=-0.001, label="Base=315",  size=4)
+
+d04 <- ggplot(ICU, aes(x=ID)) +
+ geom_density(fill="green") +
+ ggtitle("ID") +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=0.8, y=-0.001, label="Base=315",  size=4)
+
+multiplot(d01, d02, d03, d04, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
+
+```
+
+
+## Density plot of Vital Status by Numeric variables 
+```{r}
+n01<-ggplot(ICU, aes(x=Age, fill = Status)) +
+  theme_bw() +
+      geom_density(alpha=0.5) +
+  labs(y = "Density",
+       title = "Density distribution of Vital Status by Age")
+
+n02<-ggplot(ICU, aes(x=Systolic, fill = Status)) +
+  theme_bw() +
+      geom_density(alpha=0.5) +
+  labs(y = "Density",
+       title = "Density distribution of Vital Status Systolic")
+
+n03<-ggplot(ICU, aes(x=HeartRate, fill = Status)) +
+  theme_bw() +
+      geom_density(alpha=0.5) +
+  labs(y = "Density",
+       title = "Density distribution of Vital Status HeartRate")
+
+n04<-ggplot(ICU, aes(x=Age, fill = Status)) +
+  theme_bw() +
+  facet_wrap(~ Sex) +
+      geom_density(alpha=0.5) +
+  labs(y = "Density",
+       title = "Density distribution of Vital Status in male and female patients by Age")
+
+multiplot(n01, n02, n03, n04, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
+```
+
+
+# Observations
+
+  - There are more male than female in the population.
+  - The number of patient who live is higher than the population who died
+  - More Patients from the population aged 50 and above died in both male and female
+  - The female population experienced more death than men of the same age bracket as 
+  - The desity plot is peaked at the top at the age 75 for both male and female meaning more patients aged 75 died.
+
+
