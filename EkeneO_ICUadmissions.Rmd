@@ -69,7 +69,6 @@ Variable Names:
   20.	CRE: Creatinine from initial blood gases (0 = ²2.0, 1 = >2.0) 
   21.	LOC: Level of consciousness at admission (0 = no coma or stupor, 1= deep stupor, 2 = coma) 
 
-
 # Reading in the Data set
 ```{r}
 ICU <- read.table("C:/Users/ekene/OneDrive - McMaster University/Avenue2Learn_Winter2020/EH 705/eh705termproject/ICUAdmissions.csv", header=TRUE, sep=",", na.strings="NA", dec=".", strip.white=TRUE)
@@ -96,7 +95,7 @@ From the ICU Admissions dataset, I made the following observations;
 
 # Converting Numerical variables to Factor Variables
 
-Labelling teh factor levels helps with comparative analysis and visualization
+Labelling the factor levels helps with comparative analysis and visualization
 
 ```{r}
 ICU <- within(ICU, {
@@ -168,6 +167,10 @@ headTail(ICU) %>% datatable(rownames = TRUE, filter="top", options = list(pageLe
 ```{r}
 summary(ICU)
 ```
+
+* Age ranges from 16-92 years old with a mean of 57.55 and median of 63
+* Systolic blood pressure ranges from 36-256 with a mean of 132.3 and median of 130
+* Heart rate ranges from 39-192 beats per minute with a mean of 98.92 and median of 96
 
 ```{r}
 str(ICU)
