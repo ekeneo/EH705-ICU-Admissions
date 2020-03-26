@@ -490,34 +490,33 @@ multiplot(n01, n02, n03, n04, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 # Statistical Analysis 
 
 ```{r echo=FALSE}
-xray:: distributions(icu)
+xray:: distributions(ICU)
 ```
 
-## Normal Distributions of numeric variables
+## Distribution
 ```{r}
-with(icu, qqPlot(Systolic, dist="norm", id=list(method="y", n=2, 
-  labels=rownames(uci.rc)), main="Systolic"))
-```
-
-```{r}
-normalityTest(~Systolic, test="shapiro.test", data=icu)
+with(ICU, qqPlot(Systolic, dist="norm", id=list(method="y", n=2, 
+  labels=rownames(ICU)), main="Systolic"))
 ```
 
 ```{r}
-with(icu, qqPlot(HeartRate, dist="norm", id=list(method="y", n=2, 
-  labels=rownames(uci.rc)), main="Heartrate"))
+normalityTest(~Systolic, test="shapiro.test", data=ICU)
 ```
 
 ```{r}
-normalityTest(~HeartRate, test="shapiro.test", data=icu)
+with(ICU, qqPlot(HeartRate, dist="norm", id=list(method="y", n=2, 
+  labels=rownames(ICU)), main="Heartrate"))
 ```
 
 ```{r}
-with(icu, qqPlot(Age, dist="norm", id=list(method="y", n=2, 
-  labels=rownames(uci.rc)), main="Age"))
+normalityTest(~HeartRate, test="shapiro.test", data=ICU)
 ```
 
 ```{r}
-normalityTest(~Age, test="shapiro.test", data=icu)
+with(ICU, qqPlot(Age, dist="norm", id=list(method="y", n=2, 
+  labels=rownames(ICU)), main="Age"))
 ```
 
+```{r}
+normalityTest(~Age, test="shapiro.test", data=ICU)
+```
