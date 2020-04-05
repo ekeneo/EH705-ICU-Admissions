@@ -1,5 +1,5 @@
 ---
-title: "Ekene Olatunji: Group project, eH705"
+title: "Group project, eH705"
 author: "Ekene Olatunji"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
@@ -479,7 +479,6 @@ n04<-ggplot(ICU, aes(x=Age, fill = Status)) +
 multiplot(n01, n02, n03, n04, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ```
 
-
 # Observations
 
   - There are more male than female in the population.
@@ -488,5 +487,36 @@ multiplot(n01, n02, n03, n04, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
   - The female population experienced more death than men of the same age bracket as 
   - The desity plot is peaked at the top at the age 75 for both male and female meaning more patients aged 75 died.
 
+# Statistical Analysis 
 
-hellllloooo - vik
+```{r echo=FALSE}
+xray:: distributions(ICU)
+```
+
+## Distribution
+```{r}
+with(ICU, qqPlot(Systolic, dist="norm", id=list(method="y", n=2, 
+  labels=rownames(ICU)), main="Systolic"))
+```
+
+```{r}
+normalityTest(~Systolic, test="shapiro.test", data=ICU)
+```
+
+```{r}
+with(ICU, qqPlot(HeartRate, dist="norm", id=list(method="y", n=2, 
+  labels=rownames(ICU)), main="Heartrate"))
+```
+
+```{r}
+normalityTest(~HeartRate, test="shapiro.test", data=ICU)
+```
+
+```{r}
+with(ICU, qqPlot(Age, dist="norm", id=list(method="y", n=2, 
+  labels=rownames(ICU)), main="Age"))
+```
+
+```{r}
+normalityTest(~Age, test="shapiro.test", data=ICU)
+```
