@@ -1,6 +1,6 @@
 ---
-title: "Group project, eH705"
-author: "Ekene Olatunji"
+title: "ICU Admissions Term Project, eH705"
+author: "Group XYZ"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
   html_document: 
@@ -71,7 +71,8 @@ Variable Names:
 
 # Reading in the Data set
 ```{r}
-ICU <- read.table("C:/Users/ekene/OneDrive - McMaster University/Avenue2Learn_Winter2020/EH 705/eh705termproject/ICUAdmissions.csv", header=TRUE, sep=",", na.strings="NA", dec=".", strip.white=TRUE)
+# ICU <- read.table("C:/Users/ekene/OneDrive - McMaster University/Avenue2Learn_Winter2020/EH 705/eh705termproject/ICUAdmissions.csv", header=TRUE, sep=",", na.strings="NA", dec=".", strip.white=TRUE)
+ICU <- read.table("./ICUAdmissions.csv", header=TRUE, sep=",", na.strings="NA", dec=".", strip.white=TRUE)
 ```
 
 ```{r}
@@ -85,12 +86,12 @@ summary(ICU)
 
 ## Observation
 From the ICU Admissions dataset, I made the following observations;
-  1. Most of the variables are integer but from information about the data, most of the variables can be recoded to factor variables.
-  2. There are only four variables that can be left as numerical variables others can be recoded to categorical/factor variables
-  2. There would be a need to recode the categorical variables to factors.
-  3. The dependent variable is the binary variable Vital Status (Status). 
-  4. Nineteen possible predictor variables, both discrete and continuous, were also observed. 
-  5. There are no missing data
+  1. Most of the variables are integer but from information about the data, most of the variables can be recoded to factor variables.  
+  2. There are only four variables that can be left as numerical variables others can be recoded to categorical/factor variables  
+  2. There would be a need to recode the categorical variables to factors.  
+  3. The dependent variable is the binary variable Vital Status (Status).   
+  4. Nineteen possible predictor variables, both discrete and continuous, were also observed.   
+  5. There are no missing data  
   
 
 # Converting Numerical variables to Factor Variables
@@ -100,53 +101,21 @@ Labelling the factor levels helps with comparative analysis and visualization
 ```{r}
 ICU <- within(ICU, {
   Status <- factor(Status, labels=c('Lived','Died'))
-})
-ICU <- within(ICU, {
   Sex <- factor(Sex, labels=c('Male','Female'))
-})
-ICU <- within(ICU, {
   Race <- factor(Race, labels=c('White','Black','Other'))
-})
-ICU <- within(ICU, {
   Service <- factor(Service, labels=c('Medical','Surgical'))
-})
-ICU <- within(ICU, {
   Cancer <- factor(Cancer, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Renal <- factor(Renal, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Infection <- factor(Infection, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   CPR <- factor(CPR, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Previous <- factor(Previous, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Type <- factor(Type, labels=c('Elective','Emergency'))
-})
-ICU <- within(ICU, {
   Fracture <- factor(Fracture, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   PCO2 <- factor(PCO2, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   PH <- factor(PH, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   PO2 <- factor(PO2, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Bicarbonate <- factor(Bicarbonate, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Creatinine <- factor(Creatinine, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Consciousness <- factor(Consciousness, labels=c('Conscious','Deep Stupor','Coma'))
 })
 ```
@@ -520,3 +489,128 @@ with(ICU, qqPlot(Age, dist="norm", id=list(method="y", n=2,
 ```{r}
 normalityTest(~Age, test="shapiro.test", data=ICU)
 ```
+
+# Differences in Means
+
+## Summary Statistics 
+
+```{r}
+numSummary(ICU[,c("Age", "Systolic", "HeartRate"), drop=FALSE], groups=ICU$Status, statistics=c("mean", "sd", "se(mean)"),quantiles=c(0,.25, .5, .75,1))
+```
+
+```{r}
+library(psych)
+describeBy(ICU, ICU$Status)
+```
+
+## Age by Status
+__Ho:__ the variances for Lived and Died are equal  
+__Ha:__ the variances are different
+
+__Ho:__ the means are equal  
+__Ha:__ the means are different
+
+The following is the comparison of variances between the two Status groups for Age.
+
+```{r}
+with(ICU, tapply(Age, Status, var, na.rm=TRUE))
+```
+
+The following code produces the result of the LeveneTest for testing homogeneity of variances.
+
+```{r}
+leveneTest(Age ~ Status, data=ICU, center="median")
+```
+
+Since the p value = 0.07855 for testing the homogeneity of variances is greater than 0.05, we retain the null hypothesis with a 5% risk of a type 1 error and conclude that the variances for Lived and Died are equal. As such, the Student t-test is used to analyze whether there was a significant difference in means.
+
+
+```{r}
+t.test(Age~Status, alternative='two.sided', conf.level=.95, var.equal=TRUE, data=ICU)
+qt(c(0.025), df=314, lower.tail=TRUE)
+```
+
+As the p-value = 0.007211, 0 is not within the confidence intervals of -16.35688 to -2.59312 and t = -2.7151 is less than -1.967548, we reject the null hypothesis and conclude that the means for Age for the groups Lived and Died are not the same. 
+
+
+## HeartRate by Status
+__Ho:__ the variances for Lived and Died are equal  
+__Ha:__ the variances are different
+
+__Ho:__ the means are equal  
+__Ha:__ the means are different
+
+The following is the comparison of variances between the two Status groups for HeartRate.
+```{r}
+with(ICU, tapply(HeartRate, Status, var, na.rm=TRUE))
+```
+
+The following code produces the result of the LeveneTest for testing homogeneity of variances.
+```{r}
+leveneTest(HeartRate ~ Status, data=ICU, center="median")
+```
+
+Since the p-value = 0.929 for testing the homogeneity of variances is greater than 0.05, we retain the null hypothesis with a 5% risk of a type 1 error and conclude that the variances for Lived and Died are equal. As such, the Student t-test is used to analyze whether there was a significant difference in means.
+
+```{r}
+t.test(HeartRate~Status, alternative='two.sided', conf.level=.95, var.equal=TRUE, data=ICU)
+qt(c(0.025), df=314, lower.tail=TRUE)
+```
+
+As the p-value = 0.6553, 0 is within the confidence intervals of -11.496845 to 7.246845 and t = -0.44714 is greater than -1.967548, we retain the null hypothesis at a 5% risk level of a type 1 error and conclude that the means for HeartRate are the same among those that lived and those that died. 
+
+## Systolic by Status
+__Ho:__ the variances for Lived and Died are equal  
+__Ha:__ the variances are different  
+
+__Ho:__ the means are equal  
+__Ha:__ the means are different
+
+The following is the comparison of variances between the two Status groups for Systolic.
+```{r}
+with(ICU, tapply(Systolic, Status, var, na.rm=TRUE))
+```
+
+The following code produces the result of the LeveneTest for testing homogeneity of variances.
+```{r}
+leveneTest(Systolic ~ Status, data=ICU, center="median")
+```
+
+Since the p-value = 0.04205 for testing the homogeneity of variances is less than 0.05, we reject the null hypothesis with a 5% risk of a type 1 error and conclude that the variances for Lived and Died are not equal. As such, the Welch two Sample t-test is used to analyze whether there was a significant difference in means. 
+
+```{r}
+t.test(Systolic~Status, alternative="two.sided", conf.level=.95, var.equal=FALSE, data=ICU)
+qt(c(0.025), df=314, lower.tail=TRUE)
+```
+
+As the p-value = 0.01856, 0 is not within the confidence intervals of  2.938642 to 30.698858 and t = 2.4341 is greater than 1.9675, we reject the null hypothesis at a 5% risk level of a type 1 error and conclude that the means for systolic blood pressure are not the same among those that lived and those that died. 
+
+
+## Age by Sex
+__Ho:__ the variances for Lived and Died are equal  
+__Ha:__ the variances are different
+
+__Ho:__ the means are equal  
+__Ha:__ the means are different
+
+The following is the comparison of variances between the two Sex groups for Age.
+
+```{r}
+with(ICU, tapply(Age, Sex, var, na.rm=TRUE))
+```
+
+The following code produces the result of the LeveneTest for testing homogeneity of variances.
+```{r}
+leveneTest(Age ~ Sex, data=ICU, center="median")
+```
+
+Since the p-value = 0.7344 for testing the homogeneity of variances is greater than 0.05, we retain the null hypothesis with a 5% risk of a type 1 error and conclude that the variances for Lived and Died are equal. As such, the Student t-test is used to analyze whether there was a significant difference in means.
+
+```{r}
+t.test(Age~Sex, alternative='two.sided', conf.level=.95, var.equal=TRUE, data=ICU)
+qt(c(0.025), df=314, lower.tail=TRUE)
+```
+
+As the p-value = 0.1759, 0 is within the confidence intervals of -9.708824 to 1.789469 and t = -1.3582 is greater than - 1.9675, we retain the null hypothesis at a 5% risk level of a type 1 error and conclude that the means for systolic blood pressure are the same between the two groups.
+
+
