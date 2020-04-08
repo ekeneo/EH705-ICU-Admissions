@@ -21,7 +21,7 @@ output:
 ---
 
 ```{r setup, eval=TRUE, include=FALSE}  
-knitr::opts_chunk$set( comment=NA, eval=TRUE,  echo=TRUE, warning=FALSE, message=FALSE, error=FALSE, root.dir = "C:/Users/ekene/OneDrive - McMaster University/Avenue2Learn_Winter2020/EH 705/eh705termproject") 
+knitr::opts_chunk$set( comment=NA, eval=TRUE,  echo=TRUE, warning=FALSE, message=FALSE, error=FALSE, root.dir = "C:/Users/ekene/Documents/eH705_Project") 
 pacman::p_load(psych, ggplot2, DT, sjPlot, knitr, DescTools,
                ggcorrplot, qgraph, corrr, tidyverse, Hmisc )
 ```
@@ -41,7 +41,7 @@ library(rgl)
 knitr::knit_hooks$set(webgl = hook_webgl)
 ```
 
-# About the Dataset
+# About the ICU Admissions Dataset
 
 Description: The data consist of 200 subjects from a larger study on the survival of patients following admission to an adult intensive care unit (ICU). The study used logistic regression to predict the probability of survival for these patients until their discharge from the hospital. The dependent variable is the binary variable Vital Status (STA). Nineteen possible predictor variables, both discrete and continuous, were also observed. 
 Number of cases: 200 
@@ -69,7 +69,7 @@ Variable Names:
   20.	CRE: Creatinine from initial blood gases (0 = ²2.0, 1 = >2.0) 
   21.	LOC: Level of consciousness at admission (0 = no coma or stupor, 1= deep stupor, 2 = coma) 
 
-# Reading in the Data set
+# Reading in the ICU Admissions Dataset
 ```{r}
 # ICU <- read.table("C:/Users/ekene/OneDrive - McMaster University/Avenue2Learn_Winter2020/EH 705/eh705termproject/ICUAdmissions.csv", header=TRUE, sep=",", na.strings="NA", dec=".", strip.white=TRUE)
 ICU <- read.table("./ICUAdmissions.csv", header=TRUE, sep=",", na.strings="NA", dec=".", strip.white=TRUE)
@@ -79,19 +79,16 @@ ICU <- read.table("./ICUAdmissions.csv", header=TRUE, sep=",", na.strings="NA", 
 str(ICU)
 ```
 
-# Statistical Summary of the dataset variables
-```{r}
-summary(ICU)
-```
+## Findings
 
-## Observation
-From the ICU Admissions dataset, I made the following observations;
-  1. Most of the variables are integer but from information about the data, most of the variables can be recoded to factor variables.  
-  2. There are only four variables that can be left as numerical variables others can be recoded to categorical/factor variables  
-  2. There would be a need to recode the categorical variables to factors.  
-  3. The dependent variable is the binary variable Vital Status (Status).   
-  4. Nineteen possible predictor variables, both discrete and continuous, were also observed.   
-  5. There are no missing data  
+The ICU Admissions dataset consists of 200 observations with 21 variables. From the following observations we found;
+
+  1. The dependent variable is the binary variable Vital Status (Status).   
+  2. Nineteen possible predictor variables, both discrete and continuous, were also observed. 
+  3. Most of the variables are integer but from information about the data, most of the variables can be recoded to factor variables.  
+  4. There are only four variables that can be left as numerical variables others can be recoded to categorical/factor variables.  
+  5. There would be a need to recode the categorical variables to factors.  
+  6. There are no missing data  
   
 
 # Converting Numerical variables to Factor Variables
@@ -120,29 +117,28 @@ ICU <- within(ICU, {
 })
 ```
 
-# Viewing a few rows of the recorded dataset
+## Viewing a few rows of the recorded dataset
 ```{r}
 headTail(ICU) %>% datatable(rownames = TRUE, filter="top", options = list(pageLenght = 10, scrollX=T))%>% formatRound(columns=c(1:17), digits=0)
 ```
 
-# Saving new recoded dataset
+## Saving new recoded dataset
 ```{r}
 # write.csv(ICU, file="ICUAdmissions_recoded.csv", row.names=FALSE)
 ```
 
 # Data Exploration - Statistical summaries and Graphing of variables
 
+```{r}
+str(ICU)
+```
+
+**Findings**
+* The following variables were successfully recoded; Status, Sex, Race, Service, Cancer, Renal, Infection, CPR, Previous, Type,Fracture, PCO2,PH, PO2, Bicarbonate, Creatinine, and Consciousness. 
+
 ## Statistical summary of the recoded dataset
 ```{r}
 summary(ICU)
-```
-
-* Age ranges from 16-92 years old with a mean of 57.55 and median of 63
-* Systolic blood pressure ranges from 36-256 with a mean of 132.3 and median of 130
-* Heart rate ranges from 39-192 beats per minute with a mean of 98.92 and median of 96
-
-```{r}
-str(ICU)
 ```
 
 ## Numerical Summary of Int VAriables
@@ -151,7 +147,19 @@ numSummary(ICU[,c("Age", "HeartRate", "Systolic"), drop=FALSE], statistics=c("me
   "quantiles"), quantiles=c(0,.25,.5,.75,1))
 ```
 
+**Findings**
+
+* Age ranges from 16-92 years old with a mean of 57.55 and median of 63
+* Systolic blood pressure ranges from 36-256 with a mean of 132.3 and median of 130
+* Heart rate ranges from 39-192 beats per minute with a mean of 98.92 and median of 96
+
 # Graphing
+
+## Statistical Analysis 
+
+```{r echo=FALSE}
+xray:: distributions(ICU)
+```
 
 ## Plotting the frequency distributon of all factor variables to Status
 ```{r}
@@ -456,13 +464,7 @@ multiplot(n01, n02, n03, n04, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
   - The female population experienced more death than men of the same age bracket as 
   - The desity plot is peaked at the top at the age 75 for both male and female meaning more patients aged 75 died.
 
-# Statistical Analysis 
-
-```{r echo=FALSE}
-xray:: distributions(ICU)
-```
-
-## Distribution
+# Distribution
 ```{r}
 with(ICU, qqPlot(Systolic, dist="norm", id=list(method="y", n=2, 
   labels=rownames(ICU)), main="Systolic"))
