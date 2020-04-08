@@ -10,7 +10,7 @@ output:
     toc_float: 
       toc_collapsed: true
     includes:
-      after_body: 
+      after_body: footer.html
     theme: journal
     fig_height: 4
     fig_width: 4
