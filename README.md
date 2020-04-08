@@ -1,9 +1,5 @@
 # EH705-ICU-Admissions
 EH705 Term Project. Data analysis for ICU Admissions.
-@@ -181,7 +181,20 @@ str(ICU)
-numSummary(ICU[,c("Age", "HeartRate", "Systolic"), drop=FALSE], statistics=c("mean", "sd", "IQR", 
-  "quantiles"), quantiles=c(0,.25,.5,.75,1))
-```
 
 ## Detection of outliers of Int Variables 
 ```{r}
@@ -19,13 +15,7 @@ heartrate_outlier<-boxplot.stats(ICU$HeartRate)
 systolic_outlier$out
 heartrate_outlier$out
 ```
-# Graphing
 
-## Plotting the frequency distributon of all factor variables to Status
-@ -520,3 +533,147 @@ with(ICU, qqPlot(Age, dist="norm", id=list(method="y", n=2,
-```{r}
-normalityTest(~Age, test="shapiro.test", data=ICU)
-```
 
 ## Crosstabs (relations between categorical variables)
 ```{r}
