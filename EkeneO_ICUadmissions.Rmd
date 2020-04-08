@@ -475,7 +475,7 @@ normalityTest(~Age, test="shapiro.test", data=ICU)
 The distribution of the ICU attributes will be explored below. Many of the attributes chosen to be tested here relate to the history of the individuals in the data set or the circumstances of the admission, rather than lab tests on admission. It would be interesting to explore  Most of the categorical attributes in this dataset have two categories, making the degrees of freedom 1 for chi squared distribution. 
 
 ```{r echo=FALSE, fig.cap= "Theoretical chi square distribution with 1 degrees of freedom", out.width="70%" }
-knitr::include_graphics("C:/Users/cathy/OneDrive/Desktop/eHealth 705 - Stats/eHealth 705 statkey chisq 1df.png")
+knitr::include_graphics("./eHealth 705 statkey chisq 1df.png")
 ```
 For Categorical variables with two categories:    
 _Null Hypothesis_: the attribute is distributed uniformally, the chi squared value does not exceed the hypothesized  value of 3.841 (p = 0.05)    
@@ -607,7 +607,7 @@ _Null Hypothesis_: the attribute is distributed uniformally, the chi squared val
 _Alternative Hypothesis_: the attribute is not distiributed uniformally, The chi squared value exceeds the hypothesized value of 5.992 (p=0.05)    
 
 ```{r echo=FALSE, fig.cap= "Theoretical chi square distribution with 2 degrees of freedom", out.width="70%" }
-knitr::include_graphics("C:/Users/cathy/OneDrive/Desktop/eHealth 705 - Stats/eHealth 705 statkey chisq 2df.png")
+knitr::include_graphics("./eHealth 705 statkey chisq 2df.png")
 ```
 
 Chi squared test - Consciousness
