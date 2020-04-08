@@ -1,0 +1,106 @@
+## Plotting the frequency distributon of all factor variables to Status
+```{r}
+p01<-ggplot(ICU, aes(x=Sex )) +
+ geom_bar( fill="pink" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-5, label="Base=200",  size=4, color="black" )  
+
+p02<-ggplot(ICU, aes(x=Race )) +
+ geom_bar( fill="lightblue" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4) 
+ 
+p03<-ggplot(ICU, aes(x=Service )) +
+ geom_bar( fill="blue" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p04 <- ggplot(ICU, aes(x=Cancer )) +
+ geom_bar( fill="Green" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p05 <- ggplot(ICU, aes(x=Renal )) +
+ geom_bar( fill="Orange" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p06 <- ggplot(ICU, aes(x=Infection )) +
+ geom_bar( fill="Red" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p07 <- ggplot(ICU, aes(x=CPR )) +
+ geom_bar( fill="Yellow" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+ 
+p08 <- ggplot(ICU, aes(x=Previous )) +
+ geom_bar( fill="Purple" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+library(Rmisc)
+multiplot(p01, p02, p03, p04, p05, p06, p07, p08,  layout=matrix(c(1:8), nrow=4, byrow=TRUE))
+```
+
+```{r}
+p09<-ggplot(ICU, aes(x=Type )) +
+ geom_bar( fill="pink" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-5, label="Base=200",  size=4, color="black" )
+
+p10<-ggplot(ICU, aes(x=Fracture )) +
+ geom_bar( fill="lightblue" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p11<-ggplot(ICU, aes(x=PO2 )) +
+ geom_bar( fill="blue" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p12 <- ggplot(ICU, aes(x=PH )) +
+ geom_bar( fill="Green" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p13 <- ggplot(ICU, aes(x=PCO2 )) +
+ geom_bar( fill="Orange" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p14 <- ggplot(ICU, aes(x=Bicarbonate )) +
+ geom_bar( fill="Red" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+p15 <- ggplot(ICU, aes(x=Creatinine )) +
+ geom_bar( fill="Yellow" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+ 
+p16 <- ggplot(ICU, aes(x=Consciousness )) +
+ geom_bar( fill="Purple" )  +
+ theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
+ theme(axis.text.x=element_text(size=14 )) +
+ annotate("text", x=.8, y=-1, label="Base=200",  size=4)
+
+library(Rmisc)
+multiplot(p09, p10, p11, p12, p13, p14, p15, p16, layout=matrix(c(1:8), nrow=4, byrow=TRUE))
+```
