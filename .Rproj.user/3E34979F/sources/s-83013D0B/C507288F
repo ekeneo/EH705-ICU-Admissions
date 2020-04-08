@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1586386433801.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1358424483",
+    "id" : "C507288F",
+    "lastKnownWriteTime" : 1586387161,
+    "last_content_update" : 1586387161223,
+    "path" : "~/EH705-ICU-Admission-new1/eH705_ICUadmissions.Rmd",
+    "project_path" : "eH705_ICUadmissions.Rmd",
+    "properties" : {
+        "cursorPosition" : "52,0",
+        "scrollLine" : "35"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

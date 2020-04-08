@@ -47,7 +47,6 @@ This report is created by Ekene Olatunji, Caterine Nassralla, Victoria Chin, Bas
 
 # About the ICU Admissions Dataset
 
-
 ## Description 
 
 The ICU Admission dataset contains observations of patients that were admitted to an adult intensive care unit (ICU). Using the principles taught during the eHealth 705 course, the attributes that make up this dataset were explored, analyzed and a logistic regression model was created. The response variable of this dataset was Status of patients after admission, that is, whether they lived or died after admission to ICU. A description of the variables is available below.
