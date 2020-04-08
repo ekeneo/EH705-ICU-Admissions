@@ -1,6 +1,6 @@
 ---
 title: "ICU Admissions Term Project, eH705"
-authors: "Ekene Olatunji, Catherine Nassralla, Victoria Chin, Bassam Chamas, and Sajiya Somji"
+authors: "Ekene Olatunji, Catherine Nassralla, Victoria Chin, Basma Chamas, and Sajiya Somji"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
   html_document: 
@@ -42,11 +42,11 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 ```
 
 # Statement of Authorship
-This report is created by Ekene Olatunji, Caterine Nassralla, Victoria Chin, Bassam Chamas, and Sajiya Somji for the eHealth 705 Statistics in eHealth final project.
+This report is created by Ekene Olatunji, Caterine Nassralla, Victoria Chin, Basma Chamas, and Sajiya Somji for the eHealth 705 Statistics in eHealth final project.
 
 
 # About the ICU Admissions Dataset
-
+The ICU Admissions Dataset was obtained 
 
 ## Description 
 
