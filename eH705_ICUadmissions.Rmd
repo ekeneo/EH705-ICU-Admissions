@@ -43,8 +43,11 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 
 # About the ICU Admissions Dataset
 
-Description: The data consist of 200 subjects from a larger study on the survival of patients following admission to an adult intensive care unit (ICU). The study used logistic regression to predict the probability of survival for these patients until their discharge from the hospital. The dependent variable is the binary variable Vital Status (STA). Nineteen possible predictor variables, both discrete and continuous, were also observed. 
-Number of cases: 200 
+##Description   
+
+The ICU Admission dataset contains observations of patients that were admitted to an adult intensive care unit (ICU). Using the principles taught during the eHealth 705 course, the attributes that make up this dataset were explored, analyzed and a logistic regression model was created. The response variable of this dataset was Status of patients after admission, that is, whether they lived or died after admission to ICU. A description of the variables is available below. 
+
+Number of cases: 200   
 Variable Names: 
 
   1.	ID: ID number of the patient 
@@ -1196,5 +1199,4 @@ head(predicted.classes, 12)
 
 mean(predicted.classes == ICU$Status)
 plotcp(icutree)
-
 ```
