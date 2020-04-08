@@ -1,6 +1,6 @@
 ---
-title: "Group project, eH705"
-author: "Ekene Olatunji"
+title: "ICU Admissions Term Project, eH705"
+author: "Group XYZ"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
   html_document: 
@@ -10,7 +10,7 @@ output:
     toc_float: 
       toc_collapsed: true
     includes:
-      after_body: 
+      after_body: footer.html
     theme: journal
     fig_height: 4
     fig_width: 4
@@ -21,7 +21,7 @@ output:
 ---
 
 ```{r setup, eval=TRUE, include=FALSE}  
-knitr::opts_chunk$set( comment=NA, eval=TRUE,  echo=TRUE, warning=FALSE, message=FALSE, error=FALSE, root.dir = "C:/Users/ekene/OneDrive - McMaster University/Avenue2Learn_Winter2020/EH 705/eh705termproject") 
+knitr::opts_chunk$set( comment=NA, eval=TRUE,  echo=TRUE, warning=FALSE, message=FALSE, error=FALSE, root.dir = "C:/Users/ekene/Documents/eH705_Project") 
 pacman::p_load(psych, ggplot2, DT, sjPlot, knitr, DescTools,
                ggcorrplot, qgraph, corrr, tidyverse, Hmisc )
 ```
@@ -41,7 +41,7 @@ library(rgl)
 knitr::knit_hooks$set(webgl = hook_webgl)
 ```
 
-# About the Dataset
+# About the ICU Admissions Dataset
 
 Description: The data consist of 200 subjects from a larger study on the survival of patients following admission to an adult intensive care unit (ICU). The study used logistic regression to predict the probability of survival for these patients until their discharge from the hospital. The dependent variable is the binary variable Vital Status (STA). Nineteen possible predictor variables, both discrete and continuous, were also observed. 
 Number of cases: 200 
@@ -69,9 +69,8 @@ Variable Names:
   20.	CRE: Creatinine from initial blood gases (0 = ²2.0, 1 = >2.0) 
   21.	LOC: Level of consciousness at admission (0 = no coma or stupor, 1= deep stupor, 2 = coma) 
 
-# Reading in the Data set
+# Reading in the ICU Admissions Dataset
 ```{r}
-#ICU <- read.table("C:/Users/ekene/OneDrive - McMaster University/Avenue2Learn_Winter2020/EH 705/eh705termproject/ICUAdmissions.csv", header=TRUE, sep=",", na.strings="NA", dec=".", strip.white=TRUE)
 ICU <- read.table("./ICUAdmissions.csv", header=TRUE, sep=",", na.strings="NA", dec=".", strip.white=TRUE)
 ```
 
@@ -79,19 +78,16 @@ ICU <- read.table("./ICUAdmissions.csv", header=TRUE, sep=",", na.strings="NA", 
 str(ICU)
 ```
 
-# Statistical Summary of the dataset variables
-```{r}
-summary(ICU)
-```
+## Findings
 
-## Observation
-From the ICU Admissions dataset, I made the following observations;
-  1. Most of the variables are integer but from information about the data, most of the variables can be recoded to factor variables.
-  2. There are only four variables that can be left as numerical variables others can be recoded to categorical/factor variables
-  2. There would be a need to recode the categorical variables to factors.
-  3. The dependent variable is the binary variable Vital Status (Status). 
-  4. Nineteen possible predictor variables, both discrete and continuous, were also observed. 
-  5. There are no missing data
+The ICU Admissions dataset consists of 200 observations with 21 variables. From the following observations we found;
+
+  1. The dependent variable is the binary variable Vital Status (Status).   
+  2. Nineteen possible predictor variables, both discrete and continuous, were also observed. 
+  3. Most of the variables are integer but from information about the data, most of the variables can be recoded to factor variables.  
+  4. There are only four variables that can be left as numerical variables others can be recoded to categorical/factor variables.  
+  5. There would be a need to recode the categorical variables to factors.  
+  6. There are no missing data  
   
 
 # Converting Numerical variables to Factor Variables
@@ -101,80 +97,47 @@ Labelling the factor levels helps with comparative analysis and visualization
 ```{r}
 ICU <- within(ICU, {
   Status <- factor(Status, labels=c('Lived','Died'))
-})
-ICU <- within(ICU, {
   Sex <- factor(Sex, labels=c('Male','Female'))
-})
-ICU <- within(ICU, {
   Race <- factor(Race, labels=c('White','Black','Other'))
-})
-ICU <- within(ICU, {
   Service <- factor(Service, labels=c('Medical','Surgical'))
-})
-ICU <- within(ICU, {
   Cancer <- factor(Cancer, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Renal <- factor(Renal, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Infection <- factor(Infection, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   CPR <- factor(CPR, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Previous <- factor(Previous, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Type <- factor(Type, labels=c('Elective','Emergency'))
-})
-ICU <- within(ICU, {
   Fracture <- factor(Fracture, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   PCO2 <- factor(PCO2, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   PH <- factor(PH, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   PO2 <- factor(PO2, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Bicarbonate <- factor(Bicarbonate, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Creatinine <- factor(Creatinine, labels=c('No','Yes'))
-})
-ICU <- within(ICU, {
   Consciousness <- factor(Consciousness, labels=c('Conscious','Deep Stupor','Coma'))
 })
 ```
 
-# Viewing a few rows of the recorded dataset
+## Viewing a few rows of the recorded dataset
 ```{r}
 headTail(ICU) %>% datatable(rownames = TRUE, filter="top", options = list(pageLenght = 10, scrollX=T))%>% formatRound(columns=c(1:17), digits=0)
 ```
 
-# Saving new recoded dataset
+## Saving new recoded dataset
 ```{r}
 # write.csv(ICU, file="ICUAdmissions_recoded.csv", row.names=FALSE)
 ```
 
 # Data Exploration - Statistical summaries and Graphing of variables
 
+```{r}
+str(ICU)
+```
+
+**Findings**
+* The following variables were successfully recoded; Status, Sex, Race, Service, Cancer, Renal, Infection, CPR, Previous, Type,Fracture, PCO2,PH, PO2, Bicarbonate, Creatinine, and Consciousness. 
+
 ## Statistical summary of the recoded dataset
 ```{r}
 summary(ICU)
-```
-
-* Age ranges from 16-92 years old with a mean of 57.55 and median of 63
-* Systolic blood pressure ranges from 36-256 with a mean of 132.3 and median of 130
-* Heart rate ranges from 39-192 beats per minute with a mean of 98.92 and median of 96
-
-```{r}
-str(ICU)
 ```
 
 ## Numerical Summary of Int VAriables
@@ -183,113 +146,18 @@ numSummary(ICU[,c("Age", "HeartRate", "Systolic"), drop=FALSE], statistics=c("me
   "quantiles"), quantiles=c(0,.25,.5,.75,1))
 ```
 
+## Findings
+
+* Age ranges from 16-92 years old with a mean of 57.55 and median of 63
+* Systolic blood pressure ranges from 36-256 with a mean of 132.3 and median of 130
+* Heart rate ranges from 39-192 beats per minute with a mean of 98.92 and median of 96
+
 # Graphing
 
-## Plotting the frequency distributon of all factor variables to Status
-```{r}
-p01<-ggplot(ICU, aes(x=Sex )) +
- geom_bar( fill="pink" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14 )) +
- annotate("text", x=.8, y=-5, label="Base=200",  size=4, color="black" )  
+## Examining the variables distribution
 
-p02<-ggplot(ICU, aes(x=Race )) +
- geom_bar( fill="lightblue" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4) 
- 
-p03<-ggplot(ICU, aes(x=Service )) +
- geom_bar( fill="blue" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4)
-
-p04 <- ggplot(ICU, aes(x=Cancer )) +
- geom_bar( fill="Green" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4)
-
-p05 <- ggplot(ICU, aes(x=Renal )) +
- geom_bar( fill="Orange" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4)
-
-p06 <- ggplot(ICU, aes(x=Infection )) +
- geom_bar( fill="Red" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4)
-
-p07 <- ggplot(ICU, aes(x=CPR )) +
- geom_bar( fill="Yellow" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4)
- 
-p08 <- ggplot(ICU, aes(x=Previous )) +
- geom_bar( fill="Purple" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4)
-
-library(Rmisc)
-multiplot(p01, p02, p03, p04, p05, p06, p07, p08,  layout=matrix(c(1:8), nrow=4, byrow=TRUE))
-```
-
-```{r}
-p09<-ggplot(ICU, aes(x=Type )) +
- geom_bar( fill="pink" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14 )) +
- annotate("text", x=.8, y=-5, label="Base=200",  size=4, color="black" )
-
-p10<-ggplot(ICU, aes(x=Fracture )) +
- geom_bar( fill="lightblue" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4)
-
-p11<-ggplot(ICU, aes(x=PO2 )) +
- geom_bar( fill="blue" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4)
-
-p12 <- ggplot(ICU, aes(x=PH )) +
- geom_bar( fill="Green" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4)
-
-p13 <- ggplot(ICU, aes(x=PCO2 )) +
- geom_bar( fill="Orange" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4)
-
-p14 <- ggplot(ICU, aes(x=Bicarbonate )) +
- geom_bar( fill="Red" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4)
-
-p15 <- ggplot(ICU, aes(x=Creatinine )) +
- geom_bar( fill="Yellow" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14, angle = 45, hjust = 1 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4)
- 
-p16 <- ggplot(ICU, aes(x=Consciousness )) +
- geom_bar( fill="Purple" )  +
- theme(axis.title.x=element_text(size=16, face="bold", colour="blue")) +
- theme(axis.text.x=element_text(size=14 )) +
- annotate("text", x=.8, y=-1, label="Base=200",  size=4)
-
-library(Rmisc)
-multiplot(p09, p10, p11, p12, p13, p14, p15, p16, layout=matrix(c(1:8), nrow=4, byrow=TRUE))
+```{r echo=FALSE}
+xray:: distributions(ICU)
 ```
 
 ## Distribution of Vital Status by the factor variables
@@ -487,6 +355,157 @@ multiplot(n01, n02, n03, n04, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
   - More Patients from the population aged 50 and above died in both male and female
   - The female population experienced more death than men of the same age bracket as 
   - The desity plot is peaked at the top at the age 75 for both male and female meaning more patients aged 75 died.
+
+# Distribution
+```{r}
+with(ICU, qqPlot(Systolic, dist="norm", id=list(method="y", n=2, 
+  labels=rownames(ICU)), main="Systolic"))
+```
+
+```{r}
+normalityTest(~Systolic, test="shapiro.test", data=ICU)
+```
+
+```{r}
+with(ICU, qqPlot(HeartRate, dist="norm", id=list(method="y", n=2, 
+  labels=rownames(ICU)), main="Heartrate"))
+```
+
+```{r}
+normalityTest(~HeartRate, test="shapiro.test", data=ICU)
+```
+
+```{r}
+with(ICU, qqPlot(Age, dist="norm", id=list(method="y", n=2, 
+  labels=rownames(ICU)), main="Age"))
+```
+
+```{r}
+normalityTest(~Age, test="shapiro.test", data=ICU)
+```
+
+# Differences in Means
+
+## Summary Statistics 
+
+```{r}
+numSummary(ICU[,c("Age", "Systolic", "HeartRate"), drop=FALSE], groups=ICU$Status, statistics=c("mean", "sd", "se(mean)"),quantiles=c(0,.25, .5, .75,1))
+```
+
+```{r}
+library(psych)
+describeBy(ICU, ICU$Status)
+```
+
+## Age by Status
+__Ho:__ the variances for Lived and Died are equal  
+__Ha:__ the variances are different
+
+__Ho:__ the means are equal  
+__Ha:__ the means are different
+
+The following is the comparison of variances between the two Status groups for Age.
+
+```{r}
+with(ICU, tapply(Age, Status, var, na.rm=TRUE))
+```
+
+The following code produces the result of the LeveneTest for testing homogeneity of variances.
+
+```{r}
+leveneTest(Age ~ Status, data=ICU, center="median")
+```
+
+Since the p value = 0.07855 for testing the homogeneity of variances is greater than 0.05, we retain the null hypothesis with a 5% risk of a type 1 error and conclude that the variances for Lived and Died are equal. As such, the Student t-test is used to analyze whether there was a significant difference in means.
+
+
+```{r}
+t.test(Age~Status, alternative='two.sided', conf.level=.95, var.equal=TRUE, data=ICU)
+qt(c(0.025), df=314, lower.tail=TRUE)
+```
+
+As the p-value = 0.007211, 0 is not within the confidence intervals of -16.35688 to -2.59312 and t = -2.7151 is less than -1.967548, we reject the null hypothesis and conclude that the means for Age for the groups Lived and Died are not the same. 
+
+
+## HeartRate by Status
+__Ho:__ the variances for Lived and Died are equal  
+__Ha:__ the variances are different
+
+__Ho:__ the means are equal  
+__Ha:__ the means are different
+
+The following is the comparison of variances between the two Status groups for HeartRate.
+```{r}
+with(ICU, tapply(HeartRate, Status, var, na.rm=TRUE))
+```
+
+The following code produces the result of the LeveneTest for testing homogeneity of variances.
+```{r}
+leveneTest(HeartRate ~ Status, data=ICU, center="median")
+```
+
+Since the p-value = 0.929 for testing the homogeneity of variances is greater than 0.05, we retain the null hypothesis with a 5% risk of a type 1 error and conclude that the variances for Lived and Died are equal. As such, the Student t-test is used to analyze whether there was a significant difference in means.
+
+```{r}
+t.test(HeartRate~Status, alternative='two.sided', conf.level=.95, var.equal=TRUE, data=ICU)
+qt(c(0.025), df=314, lower.tail=TRUE)
+```
+
+As the p-value = 0.6553, 0 is within the confidence intervals of -11.496845 to 7.246845 and t = -0.44714 is greater than -1.967548, we retain the null hypothesis at a 5% risk level of a type 1 error and conclude that the means for HeartRate are the same among those that lived and those that died. 
+
+## Systolic by Status
+__Ho:__ the variances for Lived and Died are equal  
+__Ha:__ the variances are different  
+
+__Ho:__ the means are equal  
+__Ha:__ the means are different
+
+The following is the comparison of variances between the two Status groups for Systolic.
+```{r}
+with(ICU, tapply(Systolic, Status, var, na.rm=TRUE))
+```
+
+The following code produces the result of the LeveneTest for testing homogeneity of variances.
+```{r}
+leveneTest(Systolic ~ Status, data=ICU, center="median")
+```
+
+Since the p-value = 0.04205 for testing the homogeneity of variances is less than 0.05, we reject the null hypothesis with a 5% risk of a type 1 error and conclude that the variances for Lived and Died are not equal. As such, the Welch two Sample t-test is used to analyze whether there was a significant difference in means. 
+
+```{r}
+t.test(Systolic~Status, alternative="two.sided", conf.level=.95, var.equal=FALSE, data=ICU)
+qt(c(0.025), df=314, lower.tail=TRUE)
+```
+
+As the p-value = 0.01856, 0 is not within the confidence intervals of  2.938642 to 30.698858 and t = 2.4341 is greater than 1.9675, we reject the null hypothesis at a 5% risk level of a type 1 error and conclude that the means for systolic blood pressure are not the same among those that lived and those that died. 
+
+
+## Age by Sex
+__Ho:__ the variances for Lived and Died are equal  
+__Ha:__ the variances are different
+
+__Ho:__ the means are equal  
+__Ha:__ the means are different
+
+The following is the comparison of variances between the two Sex groups for Age.
+
+```{r}
+with(ICU, tapply(Age, Sex, var, na.rm=TRUE))
+```
+
+The following code produces the result of the LeveneTest for testing homogeneity of variances.
+```{r}
+leveneTest(Age ~ Sex, data=ICU, center="median")
+```
+
+Since the p-value = 0.7344 for testing the homogeneity of variances is greater than 0.05, we retain the null hypothesis with a 5% risk of a type 1 error and conclude that the variances for Lived and Died are equal. As such, the Student t-test is used to analyze whether there was a significant difference in means.
+
+```{r}
+t.test(Age~Sex, alternative='two.sided', conf.level=.95, var.equal=TRUE, data=ICU)
+qt(c(0.025), df=314, lower.tail=TRUE)
+```
+
+As the p-value = 0.1759, 0 is within the confidence intervals of -9.708824 to 1.789469 and t = -1.3582 is greater than - 1.9675, we retain the null hypothesis at a 5% risk level of a type 1 error and conclude that the means for systolic blood pressure are the same between the two groups.
 
 
 # Difference in proportions
