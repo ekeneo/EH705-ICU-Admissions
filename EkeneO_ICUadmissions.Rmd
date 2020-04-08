@@ -630,7 +630,7 @@ prop.test(Died, Total)
 
 Since the p-value of 0.2044 is greater than 0.05, we fail to reject the null hypothesis that there is no difference between the proportion of patients that died across the 5 age groups. We can see from the sample estimates that the proportions are indeed quite similar between the 5 age groups. However, the number of patients that died in age group 1 (the youngest age group) is much lower than the rest. The greatest proportion of patients that died is in group 5 (the oldest age group). The proportions in groups 2 and 3 are quite similar and slightly higher in group 4. However, overall, most of the groups had similar proportions of patients that died, aside from the youngest age group.
 
-Further, when conducting a chi-square test with a 5% level of risk of a type 1 error and 4 degrees of freedom, the critical values are -9.49 and +9.49. Since the chi-squared value of 5.93 falls within this confidence interval, we, again, fail to reject the null hypothesis that there is no difference between the proportion of patients that died across the 5 age groups.
+Further, when conducting a chi-square test with a 5% level of risk of a type 1 error and 4 degrees of freedom, the critical value is 9.49. Since the chi-squared value of 5.93 is less than this critical value, we, again, fail to reject the null hypothesis that there is no difference between the proportion of patients that died across the 5 age groups.
 
 
 Vital status by Systolic Blood Pressure
@@ -660,7 +660,7 @@ prop.test(Died, Total)
 
 Since the p-value of 0.0001667 is less than 0.05, we will reject the null hypothesis that there is no difference between the proportion of patients that died in the 6 systolic blood pressure level groups. We can see from the sample estimates that the proportions are indeed different between the 6 groups, with the highest proportion in the hypotenstion range and in the stage 1 hypertension range. The proportions in the elevated, normal, stage 2 hypertension and stage 3 hypertension groups are much lower and are quite close to each other. Thus, the hypotension and stage 1 hypertension groups had higher proportions of patients that died. 
 
-Further, when conducting a chi-square test with a 5% level of risk of a type 1 error and 5 degrees of freedom, the critical values are -11.07 and +11.07. Since the chi-squared value of 24.597 does not fall within this confidence interval, we will, again, reject the null hypothesis that there is no difference between the proportion of patients that died in the 6 systolic blood pressure level groups.
+Further, when conducting a chi-square test with a 5% level of risk of a type 1 error and 5 degrees of freedom, the critical value is 11.07. Since the chi-squared value of 24.597 is greater than this critical value, we will, again, reject the null hypothesis that there is no difference between the proportion of patients that died in the 6 systolic blood pressure level groups.
 
 Vital status by Heart Rate
 
@@ -689,7 +689,7 @@ prop.test(Died, Total)
 
 Since the p-value of 1 is greater than 0.05, we fail to reject the null hypothesis that there is no difference between proportion of patients that died across the bradychardia, normal heart rate and elevated heart rate groups. An exact p-value of 1 means that the difference in proportions of patients that died between the 3 heart rate groups is exactly 0. Thus, there were an equal number of patients that died with bradycardia, normal heart rate and elevated heart rate.
 
-Further, when conducting a chi-square test with a 5% level of risk of a type 1 error and 2 degrees of freedom, the critical values are -5.99 and +5.99. Since the chi-squared value of 0 falls within this confidence interval, we, again, fail to reject the null hypothesis that there is no difference between the proportion of patients that died having bradychardia, normal heart rate and elevated heart rate.
+Further, when conducting a chi-square test with a 5% level of risk of a type 1 error and 2 degrees of freedom, the critical value is 5.99. Since the chi-squared value of 0 is lower than this critical value, we, again, fail to reject the null hypothesis that there is no difference between the proportion of patients that died having bradychardia, normal heart rate and elevated heart rate.
 
 Vital status by Race
 
@@ -709,7 +709,7 @@ prop.test(Died, Total)
 
 Since the p-value of 0.4046 is greater than 0.05, we fail to reject the null hypothesis that there is no difference between the proportion of patients that died that were White, Black or otherwise.
 
-Further, when conducting a chi-square test with a 5% level of risk of a type 1 error and 2 degrees of freedom, the critical values are -5.99 and +5.99. Since the chi-squared value of 1.8095 falls within this confidence interval, we, again, fail to reject the null hypothesis that there is no difference between the proportion of patients that died that were White, Black or otherwise.
+Further, when conducting a chi-square test with a 5% level of risk of a type 1 error and 2 degrees of freedom, the critical value is 5.99. Since the chi-squared value of 1.8095 is less than this critical value, we, again, fail to reject the null hypothesis that there is no difference between the proportion of patients that died that were White, Black or otherwise.
 
 When looking at the sample estimates and at the table, we see that there was almost no difference between the proportion of White patients that died and the proportion of 'Other' patients that died. However, the proportion of Black patients that died was slightly lower than the White and 'Other' groups.
 
@@ -731,7 +731,7 @@ prop.test(Died, Total)
 
 Since the p-value of 1.091e-10 is less than 0.05, we will reject the null hypothesis that there is no difference between the proportion of patients that died across the Conscious, Deep Stupor and Coma groups. 
 
-Further, when conducting a chi-square test with a 5% level of risk of a type 1 error and 2 degrees of freedom, the critical values are -5.99 and +5.99. Since the chi-squared value of 45.878 does not fall within this confidence interval, we will, again, reject the null hypothesis that there is no difference between the proportion of patients that died across the 3 Consciousness groups.
+Further, when conducting a chi-square test with a 5% level of risk of a type 1 error and 2 degrees of freedom, the critical value is 5.99. Since the chi-squared value of 45.878 is greater than this critical value, we will, again, reject the null hypothesis that there is no difference between the proportion of patients that died across the 3 Consciousness groups.
 
 With a proportion of 1, the Deep Stupor group had the highest proportion of patients that died as all the patients with a deep stupor died. The Coma group has the second highest proportion of patients that died with a sample estimate of 80% dying. The lowest number of deaths was in the group of patients that had no coma or stupor, which is expected. Those with a deep stupor had a higher proportion of deaths than those in a coma.
 
