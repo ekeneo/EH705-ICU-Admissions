@@ -353,19 +353,19 @@ n01<-ggplot(ICU, aes(x=Age, fill = Status)) +
   theme_bw() +
       geom_density(alpha=0.5) +
   labs(y = "Density",
-       title = "Density distribution of Vital Status by Age")
+       title = "Distribution of Vital Status by Age")
 
 n02<-ggplot(ICU, aes(x=Systolic, fill = Status)) +
   theme_bw() +
       geom_density(alpha=0.5) +
   labs(y = "Density",
-       title = "Density distribution of Vital Status Systolic")
+       title = "Distribution of Vital Status by Systolic")
 
 n03<-ggplot(ICU, aes(x=HeartRate, fill = Status)) +
   theme_bw() +
       geom_density(alpha=0.5) +
   labs(y = "Density",
-       title = "Density distribution of Vital Status HeartRate")
+       title = "Distribution of Vital Status by HR")
 
 n04<-ggplot(ICU, aes(x=Age, fill = Status)) +
   theme_bw() +
