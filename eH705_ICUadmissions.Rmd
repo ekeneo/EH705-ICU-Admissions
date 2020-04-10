@@ -1,6 +1,6 @@
 ---
 title: "ICU Admissions Term Project, eH705"
-authors: "Ekene Olatunji, Catherine Nassralla, Victoria Chin, Bassam Chamas, and Sajiya Somji"
+authors: "Ekene Olatunji, Catherine Nassralla, Victoria Chin, Basma Chamas, and Sajiya Somji"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
   html_document: 
@@ -47,9 +47,12 @@ This report is created by Ekene Olatunji, Catherine Nassralla, Victoria Chin, Ba
 # Executive Summary 
 
 Using the principles taught during the eHealth 705 course, the ICU Admissions dataset was explored, analyzed and a logistic regression model was created. Logistic regression was used to create a model as the response variable, Status, was categorical, as were several of the predictor variables in this dataset. Using graphs, descriptive statistics and summaries, the attributes were analyzed and recoded if needed, as well as interpreted. (include reasons why we did tests, summary of what was found. )
+- overview of tests that we performed and some of the results
+- maybe include why we chose some of the tests
+- since the main predictor variable was vital status, most of the analyses and exploration was about this variable
 
 # About the ICU Admissions Dataset
-
+The ICU Admissions Dataset was obtained 
 
 ## Description 
 
@@ -98,10 +101,11 @@ The ICU Admissions dataset consists of 200 observations with 21 variables. From 
   2. Nineteen possible predictor variables, both discrete and continuous, were also observed. 
   3. Most of the variables are integer but from information about the data, most of the variables can be recoded to factor variables. Several of the variables have two to three levels categories and so while they are numerical, their means do not offer any meaningful information. 
   4. There are only four variables that can be left as numerical variables others can be recoded to categorical/factor variables.  
-  5. There is no missing data   
+  5. There would be a need to recode the categorical variables to factors.  
+  6. There are no missing data.  
   
 
-# Converting Numerical variables to Factor Variables
+# Converting Numerical Variables to Factor Variables
 
 Attributes that could be recoded as factors included Status, Sex, Race, Service, Cancer, Renal, Infection, CPR, Previous, Type, Fracture, PCO2, PH, PO2, Bicarbonate, Creatinine and Consciousness. Labelling the factor levels with level names helps with comparative analysis and visualization. 
 
@@ -127,11 +131,15 @@ ICU <- within(ICU, {
 })
 ```
 
-## Saving new recoded dataset
+## Preview of Recoded Dataset
+```{r}
+headTail(ICU) %>% datatable(rownames = TRUE, filter="top", options = list(pageLenght = 10, scrollX=T))%>% formatRound(columns=c(1:17), digits=0)
+```
+
+## Saving Recoded Dataset
 ```{r}
 # write.csv(ICU, file="ICUAdmissions_recoded.csv", row.names=FALSE)
 ```
-
 
 # Data Exploration - Statistical summaries and Graphing of variables
 
@@ -145,13 +153,15 @@ headTail(ICU) %>% datatable(rownames = TRUE, filter="top", options = list(pageLe
 str(ICU)
 ```
 
-**Findings**
+**Findings**  
+
 * The following variables were successfully recoded; Status, Sex, Race, Service, Cancer, Renal, Infection, CPR, Previous, Type,Fracture, PCO2,PH, PO2, Bicarbonate, Creatinine, and Consciousness. 
 
-## Statistical summary of the recoded dataset
+## Statistical Summary of the Recoded Dataset
 ```{r}
 summary(ICU)
 ```
+
 
 ## Numerical Summary of Integer Variables
 ```{r}
@@ -159,15 +169,15 @@ numSummary(ICU[,c("Age", "HeartRate", "Systolic"), drop=FALSE], statistics=c("me
   "quantiles"), quantiles=c(0,.25,.5,.75,1))
 ```
 
-## Findings
+**Findings**
 
 * Age ranges from 16-92 years old with a mean of 57.55 and median of 63
-* Systolic blood pressure ranges from 36-256 with a mean of 132.3 and median of 130
+* Systolic blood pressure ranges from 36-256 mmHg with a mean of 132.3 and median of 130
 * Heart rate ranges from 39-192 beats per minute with a mean of 98.92 and median of 96
 
-# Graphing
+# Data Exploration - Graphs
 
-## Examining the variables distribution
+## Examining the Variables Distribution
 
 ```{r echo=FALSE}
 xray:: distributions(ICU)
@@ -177,7 +187,7 @@ Using the xray package, general trends in the dataset were identified.
 
 1) There are more male observations in the dataset than females.
 
-2) Many of the admissions to the ICU were emergencies, with a about a quarter of admissions being elective. This could relate to elective surgical procedures where morbidity could have been high or complications occurred. It is unclear whether people would be preemptively admitted to the ICU for high-risk procedures of if these elective admissions could be thought of as unforeseen or emergencies in themselves.
+2) Many of the admissions to the ICU were emergencies, with a about a quarter of admissions being elective. This could relate to elective surgical procedures where morbidity could have been high or complications occurred. It is unclear whether people would be preemptively admitted to the ICU for high-risk procedures or if these elective admissions could be thought of as unforeseen or emergencies in themselves.
 
 3) Looking at Status, more than 75% of observations lived after their ICU admission. 
 
@@ -190,7 +200,7 @@ Using the xray package, general trends in the dataset were identified.
 7) Looking at histograms of the three numerical variables in the dataset, which were Age, Systolic and HeartRate, it could be guess that if any of the distributions were to be normal, they would be Systolic and HeartRate. Age is very obviously not normally distributed. Systolic looks like it is centered around 140, and the mean confirms this as mentioned above. The mean of HeartRate seems to be centered around 100 and its mean confirms this visual estimate. 
 
 
-## Distribution of Vital Status by the factor variables
+## Distribution of Vital Status by Factor Variables
 ```{r}
 library(ggplot2)
 f01<-ggplot(ICU, aes(x=Sex, fill = Status)) +
@@ -310,8 +320,7 @@ library(Rmisc)
 multiplot(f13, f14, f15, f16, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ```
 
-
-## Plotting the density Distribution of the Numeric Variable
+## Plotting the density Distribution of the Numeric Variables
 
 ```{r}
 d01 <- ggplot(ICU, aes(x=Age)) +
@@ -347,25 +356,25 @@ multiplot(d01, d02, d03, d04, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ```
 
 
-## Density plot of Vital Status by Numeric variables 
+## Density Plot of Vital Status by Numeric Variables 
 ```{r}
 n01<-ggplot(ICU, aes(x=Age, fill = Status)) +
   theme_bw() +
       geom_density(alpha=0.5) +
   labs(y = "Density",
-       title = "Density distribution of Vital Status by Age")
+       title = "Distribution of Vital Status by Age")
 
 n02<-ggplot(ICU, aes(x=Systolic, fill = Status)) +
   theme_bw() +
       geom_density(alpha=0.5) +
   labs(y = "Density",
-       title = "Density distribution of Vital Status Systolic")
+       title = "Distribution of Vital Status by Systolic")
 
 n03<-ggplot(ICU, aes(x=HeartRate, fill = Status)) +
   theme_bw() +
       geom_density(alpha=0.5) +
   labs(y = "Density",
-       title = "Density distribution of Vital Status HeartRate")
+       title = "Distribution of Vital Status by HR")
 
 n04<-ggplot(ICU, aes(x=Age, fill = Status)) +
   theme_bw() +
@@ -495,7 +504,7 @@ ggplot(ICU, aes(x=Systolic, fill = Status)) +
        title = "Density distribution of Vital Status Systolic")
 ```
 
-# Uniform distribution   
+# Uniform Distribution   
 
 The distribution of the ICU attributes will be explored below. Many of the attributes chosen to be tested here relate to the history of the individuals in the data set or the circumstances of the admission, rather than lab tests on admission. It would be interesting to explore  Most of the categorical attributes in this dataset have two categories, making the degrees of freedom 1 for chi squared distribution. 
 
