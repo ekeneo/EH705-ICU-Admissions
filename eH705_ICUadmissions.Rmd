@@ -976,6 +976,25 @@ Since the p-value of 0.2044 is greater than 0.05, we fail to reject the null hyp
 
 Further, when conducting a chi-square test with a 5% level of risk of a type 1 error and 4 degrees of freedom, the critical value is 9.49. Since the chi-squared value of 5.93 is less than this critical value, we, again, fail to reject the null hypothesis that there is no difference between the proportion of patients that died across the 5 age groups.
 
+#binning by equal width instead
+
+```{r}
+ICU$Age.recodedbywidth <- with(ICU, binVariable(Age, bins=5, method='intervals', labels=c('1','2','3','4',
+  '5')))
+```
+
+```{r}
+pacman::p_load(sjPlot)
+sjt.xtab(ICU$Status, ICU$Age.recodedbywidth, show.col.prc = TRUE)
+```
+
+```{r}
+Died  <- c( 2, 2, 10, 18, 8 )
+Total <- c( 31, 19, 46, 75, 29 )
+prop.test(Died, Total)
+```
+
+#prop1 is still lower than the other ones so no difference there but prop 2 is much lower than before (was pretty equal before so not sure what that means)
 
 Vital status by Systolic Blood Pressure
 
