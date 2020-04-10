@@ -731,7 +731,6 @@ leveneTest(Age ~ Status, data=ICU, center="median")
 
 Since the p value = 0.07855 for testing the homogeneity of variances is greater than 0.05, we retain the null hypothesis with a 5% risk of a type 1 error and conclude that the variances for Lived and Died are equal. As such, the Student t-test is used to analyze whether there was a significant difference in means.
 
-
 ```{r}
 t.test(Age~Status, alternative='two.sided', conf.level=.95, var.equal=TRUE, data=ICU)
 qt(c(0.025), df=314, lower.tail=TRUE)
