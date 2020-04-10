@@ -1076,8 +1076,20 @@ systolic_outlier$out
 heartrate_outlier$out
 ```
 
+##Correlation
+Below is the correlation, conducted via Goodman Kruskal Gamma and Goodman Kruskal's Lambda. As we can see from the gamma reading below, not only is it negative thus depicting a negative relationship, it is also nowhere close to -1, depicting a non-perfect inverse correlation. 
+
+With regards to the lambda reading, while it is positive, thus depicting a positive relationship, it is also nowhere close to 1 like the gamma reading, thus depicting a non-perfect positive correlation. 
+```{r}
+pacman::p_load(DescTools)
+ICUtable<-as.table(as.matrix(ICU))
+GoodmanKruskalGamma(ICUtable, conf.level=0.95)
+
+Lambda(ICU, direction = c("symmetric", "row", "column"), conf.level=0.95)
+```
 
 ## Crosstabs (relations between categorical variables)
+Below are all the crosstabs of each categorical variable with status as the Statistically significant crosstabs include: Creatinine(X2=45.878,p=0.000), Type(X2=10.527, p=0.001), CPR(X2=7.821, p=0.005), Infection(X2=5.759,p=0.016),Renal(X2=4.976, p=0.029), and Service(X2=5.981, p=0.014). 
 ```{r}
 sjt.xtab(ICU$Status, ICU$Sex, show.col.prc = TRUE)
 sjt.xtab(ICU$Status, ICU$Race, show.col.prc = TRUE)
@@ -1096,18 +1108,18 @@ sjt.xtab(ICU$Status, ICU$Bicarbonate, show.col.prc = TRUE)
 sjt.xtab(ICU$Status, ICU$Creatinine, show.col.prc = TRUE)
 sjt.xtab(ICU$Status, ICU$Consciousness, show.col.prc = TRUE)
 ```
-Statistically significant crosstabs include: Creatinine, Type, CPR, Infection,Renal, Service. 
+
 
 ## Logistic Regression 
 Prior to conducting a logistic regression, we would like to break down the systolic blood pressure into levels. We will use clinically defined levels for hypo, normal, elevated and hyper. Ranges below 90 are considered hypo, whereas ranges from 90 to 120 are considered normal, ranges between 120 and 129 are considered elevated, and 130 plus are considered hyper. 
 
 ```{r}
-ICU$Systolic<-cut(ICU$Systolic, breaks=c(0,89,119,129,256))
+ICU$Systolic<-cut(ICU$Systolic, breaks=c(0,80,119,129,256))
 levels(ICU$Systolic)<-c("hypo", "normal", "elevated", "hyper")
 ```
 
 Below is the logistic regression model with all the predictors in the dataset.
-As we can see, key predictors that are shown to be statistically significant are age, cancer, systolic pressure, fracture, arterial blood gas concentration, type, and consciousness. We have some confidence in our model due to the small difference between the null and residual deviance. Some of our confidence intervals have zero in them, leading us to have some doubt in our model. 
+As we can see, key predictors that are shown to be statistically significant are age, cancer, type, pH, arterial blood gas concentration, and consciousness. We have confidence in our model due to the large difference between the null and residual deviance. Some of our confidence intervals have zero in them, leading us to have some doubt in our model. 
 ```{r}
 ICU.m<-glm(formula=Status~Age+Sex+Race+Service+Cancer+Renal+Infection+CPR+Systolic+HeartRate+Previous+Type+Fracture+PO2+PH+PCO2+Bicarbonate+Creatinine+Consciousness, family=binomial(logit), data=ICU)
 summary(ICU.m)
@@ -1117,14 +1129,15 @@ exp(coef(ICU.m))
 
 
 ### Final model 
-
+Below is the final model, reduced to its significant components. As we can see below,all the predictors are statistically significant, leading us to reject the null hypothesis that they are equal to 0. The large difference between the null and residual deviance lends confidence in our model. 
 ```{r}
-ICU.final.m<-glm(formula=Status~Age+Cancer+Systolic+PCO2+Consciousness+Type, family=binomial(logit),data=ICU)
+ICU.final.m<-glm(formula=Status~Age+Cancer+PH+PCO2+Consciousness+Type, family=binomial(logit),data=ICU)
 summary(ICU.final.m)
 confint(ICU.final.m)
 exp(coef(ICU.final.m))
 ```
 
+However, we must also evaluate just how good our model is, which is why we have decided to split the dataset into training and testing. The code below splits the ICU dataset into training and testing, with 150 observations in the former and 50 in the latter. 
 ```{r}
 pacman::p_load(rsample)
 set.seed(78)
@@ -1133,13 +1146,14 @@ train <- training(train_test_split)
 test <- testing(train_test_split)
 (samp <- dim(train_test_split))
 ```
-
+Below is the logistic regression conducted on the on the training model, using the reduced final model. As we can see, all predictors are statistically significant, with the gap in the null and residual deviances providing confidence in our model. 
 ```{r}
-ICU.tr<-glm(Status~Age+Cancer+Systolic+PCO2+Consciousness+Type, family=binomial(logit),data=train)
+ICU.tr<-glm(Status~Age+Cancer+PH+PCO2+Consciousness+Type, family=binomial(logit),data=train)
 summary(ICU.tr)
 ```
 
-### Testing & training the model 
+### Testing & training the model
+Below is the code for using the training model to predict the values in the testing sample, with the output showing probabilities and predictions.  The sample below predicts "dead". 
 ```{r}
 predicted.val<-predict(ICU.tr, newdata=test)
 head(predicted.val)
@@ -1151,35 +1165,39 @@ predicted.classes <- ifelse( predicted.prob > 0.5, "Lived", "Dead" )
 head(predicted.classes)
 ```
 
-
+Below we assessed whether there was multicollinearity in the dataset using VIF. As we can see, the VIFs are less than 4, thus demonstrating that there is no multicollinearity in the dataset. 
 ```{r}
 pacman::p_load(car)
 car::vif(ICU.tr)
 ```
-
+Below is our attempt to test the null model. As we can see, the intercept is statistically significant, thus demonstrating that our model is worth pursuing, although the deviances are identical. 
 ```{r}
 fit0<-glm(Status~1, family=binomial(logit), data=train)
 summary(fit0)
 ```
+Below is our null model with all the variables fitted. As we can see, all the predictors are statistically significant and depict an explanation in the variance in the variables. 
+
 ```{r}
-fitall<-glm(Status~Age+Cancer+Systolic+PCO2+Consciousness+Type, family=binomial(logit), data=train)
+fitall<-glm(Status~Age+Cancer+PH+PCO2+Consciousness+Type, family=binomial(logit), data=train)
 summary(fitall)
 ```
+Below is the Chi-square test for the predictors in the null model, which is too, statistically significant. 
 ```{r}
 anova(fitall, fit0, test="Chisq")
 ```
-
+We also used the Wald test to test the significance of our predictors. According to this test, all but PCO2 are statistically significant. 
 ```{r}
 pacman::p_load(survey)
 regTermTest(ICU.tr, "Age")
 regTermTest(ICU.tr, "Cancer")
-regTermTest(ICU.tr, "Systolic")
+regTermTest(ICU.tr, "PH")
 regTermTest(ICU.tr, "Type")
 regTermTest(ICU.tr, "PCO2")
 regTermTest(ICU.tr, "Consciousness")
 ```
 
 ## Classification and Regression Trees 
+According to the classification and regression tress below, to predict whether a patient lived or died, both consciousness and systolic blood pressure played a role. We refused to further prune our tree as the results of our cp tree does not support such decision. 
 ```{r}
 pacman::p_load(rpart, rpart.plot, rattle, dplyr)
 set.seed(2715)
