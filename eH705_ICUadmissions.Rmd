@@ -261,6 +261,13 @@ library(Rmisc)
 multiplot(f01, f02, f03, f04,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ```
 
+**Observation**
+
+ * Due to the increased ratio in the population ofmale to female, the ratio of the number of patients who lived is found almost directly proportional between male and female.
+ * From the graph regarding vital Status by race, it can be seen that the patient population of the White race is higher than the patient count for Black and other races. Overall, in the different races there are more cases of patients that lived than died.
+ * For the Vital status by Service, we can also observe that more patient died receiving medical service than surgical service.
+ * In the case of the Vital status by Cancer graph, there are more patients without a present case of Cancer, however there are als more patients who died and do not have a present case of Cancer.
+
 ```{r}
 
 f05<-ggplot(ICU, aes(x=Renal, fill = Status)) +
@@ -290,6 +297,14 @@ f08<-ggplot(ICU, aes(x=Previous, fill = Status)) +
 library(Rmisc)
 multiplot(f05, f06, f07, f08,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ``` 
+
+**Observation**
+
+ * For the Vital Status by Renal, there are more patients without history of chronic Renal failure and most of then lived however, it is also observed that there seems to be an equal proportion in Status of patients who had an history with chronic Renal failure.
+ * In the case of Vital status by Infection, it can be observed that there are more cases of patients that lived than died regardless of if they have infection or not. However, there are more cases of patients who probably had infections and died.
+ * For the vital Status by CPR, it can be observed that there are more patients who were admitted in the ICU without prior CPR but there is the likelihood of patients dying with prior CPR.
+ * The visualization of Vital Status by Previous shows that there are more patients without previous ICU admission and the cases of patients who died was low.
+
 
 ```{r}
 
@@ -321,6 +336,13 @@ library(Rmisc)
 multiplot(f09, f10, f11, f12,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ```
 
+** Observation
+ * For the Vital Status by Type, there are more patients with emergency ICU admission and those also expereince more cases of death than the elective ICU admissions.
+ * In the case of Vital status by Fracture, it can be observed that there are more cases of patients that lived than died regardless of if they have Fracture or not.  * For the vital Status by PO2, it can be observed that there are more patients who were admitted in the ICU without PO2 but there is the likelihood of patients dying with having PO2.
+ * The visualization of Vital Status by PH shows that there are more patients without a dangerous level of PH and the cases of patients who died was low.
+
+
+
 ```{r}
 f13<-ggplot(ICU, aes(x=PCO2, fill = Status)) +
  theme_bw() +
@@ -351,12 +373,9 @@ library(Rmisc)
 multiplot(f13, f14, f15, f16, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ```
 
-## Observations
+**Observations**
 
-  - The number of patient who live is higher than the population who died
-  - More Patients from the population aged 50 and above died in both male and female
-  - The female population experienced more death than men of the same age bracket as 
-  - The density plot is peaked at the top at the age 75 for both male and female meaning more patients aged 75 died.
+From the collection of graphs above, the most visually prominent chart is the relationship between vital status and Consciousness which shows that although there is a high count of patients who were conscious at admission, however most patients that were received at a stage of Deep Stupor or Coma lost consciousness and died.
 
 
 # Uniform Distribution   
@@ -1111,9 +1130,10 @@ sjt.xtab(ICU$Status, ICU$Bicarbonate, show.col.prc = TRUE)
 sjt.xtab(ICU$Status, ICU$Creatinine, show.col.prc = TRUE)
 sjt.xtab(ICU$Status, ICU$Consciousness, show.col.prc = TRUE)
 ```
+
 Statistically significant crosstabs include: Creatinine, Type, CPR, Infection,Renal, Service. 
 
-## Logistic Regression 
+# Logistic Regression 
 Prior to conducting a logistic regression, we would like to break down the systolic blood pressure into levels. We will use clinically defined levels for hypo, normal, elevated and hyper. Ranges below 90 are considered hypo, whereas ranges from 90 to 120 are considered normal, ranges between 120 and 129 are considered elevated, and 130 plus are considered hyper. 
 
 ```{r}
@@ -1132,7 +1152,7 @@ exp(coef(ICU.m))
 ```
 
 
-### Final model 
+## Final model 
 
 ```{r}
 ICU.final.m<-glm(formula=Status~Age+Cancer+Systolic+PCO2+Consciousness+Type, family=binomial(logit),data=ICU)
@@ -1155,7 +1175,7 @@ ICU.tr<-glm(Status~Age+Cancer+Systolic+PCO2+Consciousness+Type, family=binomial(
 summary(ICU.tr)
 ```
 
-### Testing & training the model 
+## Testing & training the model 
 ```{r}
 predicted.val<-predict(ICU.tr, newdata=test)
 head(predicted.val)
