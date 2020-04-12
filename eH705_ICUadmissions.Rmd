@@ -630,9 +630,9 @@ ggplot(ICU, aes(x=Age)) +
  annotate("text", x=0.8, y=-0.001, label="Base=315",  size=4)
 ```
 
-
 ### Cancer by Age
-There are three peaks for of Ages where ICU admissions involved cancer. These are around 20, 50 and 70 years of age. Given the relatively small number of individuals who had cancer involvement with their admission, and the variability in ages associated, cancer might not be the best predictor of ICU admission. 
+
+There are three peaks of Ages where ICU admissions involved cancer. These are around 20, 50 and 70 years of age. Given the relatively small number of individuals who had cancer involvement with their admission, and the variability in ages associated, cancer might not be the best predictor of ICU admission. 
 
 
 ```{r}
@@ -689,9 +689,11 @@ ggplot(ICU, aes(x=Age, fill = Service)) +
        title = "Density distribution of Service by Age")
 ```
 
+
 ### Previous by Age
 
-There is a definite an almost independent peak of history of previous ICU admission with older age. It can be noted that there is a smaller peak of relatively older individuals who were admitted who had not had a previous ICU admission. This indicates that old age doe not relate clearly to previous ICU admission and future ICU admission. On the extremes of age, younger individuals are shown to have less frequency of previous ICU admission, while there is a small peak of older admission of the individuals in this dataset having had a previous ICU admission. There might be a smaller increased likelihood of ICU admission with previous ICU admission with age. 
+There is a definite and almost independent peak of history of previous ICU admission with older age. It can be noted that there is a smaller peak of relatively older individuals who were admitted who had not had a previous ICU admission. This indicates that old age does not relate clearly to previous ICU admission and future ICU admission. On the extremes of age, younger individuals are shown to have less frequency of previous ICU admission, while there is a small peak of older admission of the individuals in this dataset having had a previous ICU admission. There might be a smaller increased likelihood of ICU admission with previous ICU admission with age. 
+
 ```{r}
 ggplot(ICU, aes(x=Age, fill = Previous )) +
   theme_bw() +
@@ -699,6 +701,7 @@ ggplot(ICU, aes(x=Age, fill = Previous )) +
   labs(y = "Density",
        title = "Density distribution of Previous by Age")
 ```
+
 The plot of density distribution of the two renal categories by Age indicates that both Status groups had a higher frequency of chronic renal failure as age progressed, and peaked at around 70-75 years of age. There is a small peaks at 20 and a smaller peak at about 30 years of age for individuals who did not have chronic renal failure and did have chronic renal failure on admission, respectively. The amount of overlap in the peaks confirms the results of the previous table above indicating that the Renal attribute might not give more insight into ICU outcomes.  
 ```{r}
 ggplot(ICU, aes(x=Age, fill = Renal )) +
@@ -813,7 +816,7 @@ Using a density estimate plot, the distribution of HeartRate was produced. The m
 
 ### Vital Status by Heart Rate
 
-Both status categories have similar peaks when plotted on a density estimate plot of HeartRate. This indicates that there might not be a difference in the Status response category based on HeartRate. People who lived did seem to have a higher density of HeartRate values around 90 than those who died. A normal adult heart rate rangest between 60 and 100 beats per minute. This graph might suggest that people who lived more often had heartrates within this range, whereas those who died seemed more likely to have higher heartrates. This could inform further analysis or research. 
+Both status categories have similar peaks when plotted on a density estimate plot of HeartRate. This indicates that there might not be a difference in the Status response category based on HeartRate. People who lived did seem to have a higher density of HeartRate values around 90 than those who died. A normal adult heart rate ranges between 60 and 100 beats per minute. This graph might suggest that people who lived more often had heart rates within this range, whereas those who died seemed more likely to have higher heartrates. This could inform further analysis or research. 
 
 ```{r}
 ggplot(ICU, aes(x=HeartRate, fill = Status)) +
