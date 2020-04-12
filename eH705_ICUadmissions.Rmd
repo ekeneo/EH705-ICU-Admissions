@@ -519,6 +519,26 @@ local({
 })
 ```
 
+Chi squared test- Renal: 
+
+The distribution of renal categories was not uniform, with significantly larger difference from the expected as shown by the chi squared value of 131 which is much larger than the null hypothesized chi squared value. The low p value indicated that it is safe to reject the null hypothesis without concern for Type I error. It can thus be concluded that significantly more people did not have chronic renal failure prior to ICU admission.  
+```{r}
+local({
+  .Table <- with(ICU, table(Renal))
+  cat("\ncounts:\n")
+  print(.Table)
+  cat("\npercentages:\n")
+  print(round(100*.Table/sum(.Table), 
+  2))
+  .Probs <- c(0.5,0.5) 
+  chisq.test(.Table, p=.Probs)
+})
+```
+Additionally, more individuals in both status groups did not have chronic renal failure, indicating that chronic renal failure might not be a factor in worse outcomes during ICU admissions.
+```{r}
+table(ICU$Renal, ICU$Status)
+```
+
 For Categorical variables with three categories:    
 __H0__: the attribute is distributed uniformally, the chi squared value does not exceed the hypothesized  value of 5.992 (p = 0.05)    
 __Ha__: the attribute is not distiributed uniformally, The chi squared value exceeds the hypothesized value of 5.992 (p=0.05)    
@@ -678,6 +698,14 @@ ggplot(ICU, aes(x=Age, fill = Previous )) +
       geom_density(alpha=0.5) +
   labs(y = "Density",
        title = "Density distribution of Previous by Age")
+```
+The plot of density distribution of the two renal categories by Age indicates that both Status groups had a higher frequency of chronic renal failure as age progressed, and peaked at around 70-75 years of age. There is a small peaks at 20 and a smaller peak at about 30 years of age for individuals who did not have chronic renal failure and did have chronic renal failure on admission, respectively. The amount of overlap in the peaks confirms the results of the previous table above indicating that the Renal attribute might not give more insight into ICU outcomes.  
+```{r}
+ggplot(ICU, aes(x=Age, fill = Renal )) +
+  theme_bw() +
+      geom_density(alpha=0.5) +
+  labs(y = "Density",
+       title = "Density distribution of Renal by Age")
 ```
 
 ### Sex by Age
