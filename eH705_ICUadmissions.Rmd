@@ -1113,19 +1113,28 @@ sjt.xtab(ICU$Status, ICU$Consciousness, show.col.prc = TRUE)
 ```
 Statistically significant crosstabs include: Creatinine, Type, CPR, Infection,Renal, Service. 
 
-## Logistic Regression 
-Prior to conducting a logistic regression, we would like to break down the systolic blood pressure into levels. We will use clinically defined levels for hypo, normal, elevated and hyper. Ranges below 90 are considered hypo, whereas ranges from 90 to 120 are considered normal, ranges between 120 and 129 are considered elevated, and 130 plus are considered hyper. 
-
 ```{r}
-ICU$Systolic<-cut(ICU$Systolic, breaks=c(0,89,119,129,256))
-levels(ICU$Systolic)<-c("hypo", "normal", "elevated", "hyper")
+ICUtable<-as.table(as.matrix(ICU))
+Lambda(ICU$Age.binned, ICU$Status, direction=c("symmetric", "row", "column"), conf.level = 0.95)
+Lambda(ICU$Service,ICU$Status, direction=c("symmetric", "row", "column"), conf.level=0.95)
+Lambda(ICU$Cancer, ICU$Status, direction=c("symmetric", "row", "column"), conf.level=0.95)
+Lambda(ICU$Previous, ICU$Status, direction=c("symmetric", "row", "column"), conf.level=0.95)
+Lambda(ICU$Type, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
+Lambda(ICU$Systolic.grouped, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
+Lambda(ICU$HeartRate.grouped, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
+Lambda(ICU$Consciousness, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
+Lambda(ICU$CPR, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
+Lambda(ICU$Infection, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
+Lambda(ICU$Sex, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
+Lambda(ICU$Renal, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
 ```
+## Logistic Regression 
+In order to deduce the model that will predict the outcome of the status based on our chosen variables, we had decided to conduct a logistic regression, due to the fact that our respondent variable is binomial. 
 
-Below is the logistic regression model with all the predictors in the dataset.
-As we can see, key predictors that are shown to be statistically significant are age, cancer, systolic pressure, fracture, arterial blood gas concentration, type, and consciousness. We have some confidence in our model due to the small difference between the null and residual deviance. Some of our confidence intervals have zero in them, leading us to have some doubt in our model. 
+According to our logistic regression model below, statistically significant indicators include age, cancer, systolic blood pressure, type, service, previous and consciousness. The large enough difference between the null and residual deviance provides us with some confidence in our model, although our confidence intervals do not as they have 0 in them. However, before we state our model based on the calculations below, we will reduce our model to its significant predictors, and further investigate whether our model is sturdy. 
 
 ```{r}
-ICU.m<-glm(formula=Status~Age+Sex+Race+Service+Cancer+Renal+Infection+CPR+Systolic+HeartRate+Previous+Type+Fracture+PO2+PH+PCO2+Bicarbonate+Creatinine+Consciousness, family=binomial(logit), data=ICU)
+ICU.m<-glm(formula=Status~Age.binned+Sex+Service+Cancer+Renal+Infection+CPR+Systolic.grouped+HeartRate.grouped+Previous+Type+PO2+Consciousness, family=binomial(logit), data=ICU)
 summary(ICU.m)
 confint(ICU.m)
 exp(coef(ICU.m))
@@ -1133,29 +1142,38 @@ exp(coef(ICU.m))
 
 
 ### Final model 
+As stated above, we wanted to reduce our model to a final model, based on its significant predictors. 
 
+As we can see below, the predictors are still significant, and the difference between the null and residual deviance are still large enough to provide us with some confidence in our model, while our confidence intervals still do not. However, this does not mean that we won't test the strength of our final model, which we will do below. 
 ```{r}
-ICU.final.m<-glm(formula=Status~Age+Cancer+Systolic+PCO2+Consciousness+Type, family=binomial(logit),data=ICU)
+ICU.final.m<-glm(formula=Status~Age.binned+Service+Cancer+Systolic.grouped+Consciousness+Previous+Type, family=binomial(logit),data=ICU)
 summary(ICU.final.m)
 confint(ICU.final.m)
 exp(coef(ICU.final.m))
 ```
+### How strong is our model? 
+We will assess our model by dividing it into training and testing samples. This way, we can assess how good our model is at predicting results in the testing sample, while also further scrutinizing our training and testing model. 
 
+### Testing & training the model 
+Below we have split our ICU dataset into training and testing datasets, with 150 observations in the former, and 50 in the latter. 
 ```{r}
-pacman::p_load(rsample)
+pacman::p_load(rsample,DT)
 set.seed(78)
 train_test_split <- initial_split(ICU)
 train <- training(train_test_split)
 test <- testing(train_test_split)
 (samp <- dim(train_test_split))
+datatable(train)
 ```
 
+Below we have conducted a logistic regression on our training dataset, using the finalized coefficients that we have deduced above. We can observe below that intercept, age, cancer, consciousness, service, previous and type are statistically significant. However, systolic is no longer statistically significant. Yet, the large difference between the null and residual deviance leads us with some confidence in our model. 
 ```{r}
-ICU.tr<-glm(Status~Age+Cancer+Systolic+PCO2+Consciousness+Type, family=binomial(logit),data=train)
+ICU.tr<-glm(Status~Age.binned+Service+Cancer+Systolic.grouped+Previous+Consciousness+Type, family=binomial(logit),data=train)
 summary(ICU.tr)
+exp(coef(ICU.tr))
 ```
 
-### Testing & training the model 
+As we can see below, where we have used the training model to predict the models in the testing dataset, we do get mixed results regarding the statistical significance of the predictors based on the CIs. For example, all predictors are positive as we can see above, yet only age binned group 5, cancer,consciousness coma, previous, and type have their lower CIs above 1. Intercept does not have a lower coefficient above 1, nor does systolic thus further cementing the fact that it is not statistically significant. 
 ```{r}
 predicted.val<-predict(ICU.tr, newdata=test)
 head(predicted.val)
@@ -1165,43 +1183,76 @@ head( predict( ICU.tr, test, type="response") )
 
 predicted.classes <- ifelse( predicted.prob > 0.5, "Lived", "Dead" )
 head(predicted.classes)
+
+tab_model(
+  ICU.tr,
+  title = "Logistic Regression Odds Ratios for Status using the Training Sample",
+  show.stat = TRUE,
+  digits = 3,
+  string.stat = "z-value",
+  string.p = "p (sig)",
+  show.fstat = TRUE,
+  show.dev = TRUE,
+  show.aic = TRUE,
+  CSS = list(
+    css.depvarhead = 'color: red;',
+    css.centeralign = 'text-align: left;',
+    css.firsttablecol = 'font-weight: bold;',
+    css.summary = 'color: blue;'
+  )
+)
+
+plot_model(
+  ICU.tr,
+  title = "Logistic Regression of State of Status using the Training Sample",
+  show.p = TRUE
+)  + ylim(0, 800)
 ```
 
-
+With regards to the multicollinearity present within the model, according to the VIFs below, none are equal to 4, thus demonstrating the lack of multicollinarity in this model. 
 ```{r}
-pacman::p_load(car)
-car::vif(ICU.tr)
+pacman::p_load(car,corrplot)
+vf<-vif(ICU.tr)
+vf
+
 ```
 
+Although we have deduced that there is no multicollinearity present, we will now test the model against the null model, based on the training data. Below, we see that it's intercept is still significant. 
 ```{r}
 fit0<-glm(Status~1, family=binomial(logit), data=train)
 summary(fit0)
 ```
+
+Below, however, we attempt to fit all of the predictors, using the training data. We still see that the all of the predictors are statistically significant, thus demonstrating that this model is worth pursuing. This is further confirmed by the ANOVA chi-square conducted below, which is also statistically significant. 
 ```{r}
-fitall<-glm(Status~Age+Cancer+Systolic+PCO2+Consciousness+Type, family=binomial(logit), data=train)
+fitall<-glm(Status~Age.binned+Service+Cancer+Systolic.grouped+Previous+Consciousness+Type, family=binomial(logit), data=train)
 summary(fitall)
 ```
 ```{r}
 anova(fitall, fit0, test="Chisq")
 ```
 
+We have also conducted a Wald test to test the significance of the predictors in the training model as well. According to the results, cancer, type,consciousness, and previous are statistically significant. 
 ```{r}
 pacman::p_load(survey)
-regTermTest(ICU.tr, "Age")
+regTermTest(ICU.tr, "Age.binned")
 regTermTest(ICU.tr, "Cancer")
-regTermTest(ICU.tr, "Systolic")
+regTermTest(ICU.tr, "Systolic.grouped")
 regTermTest(ICU.tr, "Type")
-regTermTest(ICU.tr, "PCO2")
+regTermTest(ICU.tr, "Service")
 regTermTest(ICU.tr, "Consciousness")
+regTermTest(ICU.tr, "Previous")
 ```
+Now that we have deduced that our model is indeed robust, we will now move on to deduce our classificantion and regression trees, based on our variables of interest.
 
+As we can see below, the variables of interest are age, systolic, service and type. Pruning the tree doesn't seem plausible, as the xerror is steady from lines 2 to 4 and our cp graph denotes a stable cp from size 3 to 7, while the mean acuracy for our regression tree is 0.88. 
 ## Classification and Regression Trees 
 ```{r}
 pacman::p_load(rpart, rpart.plot, rattle, dplyr)
 set.seed(2715)
 
 #final model 
-icutree=rpart(Status~Age+Cancer+Systolic+Type+PCO2+Consciousness+Type+Fracture+Sex+Race+Service+Renal+Infection+CPR+HeartRate+Previous+PO2+PH+Bicarbonate+Creatinine+Consciousness, method="class", data=ICU)
+icutree=rpart(Status~Age.binned+Cancer+Systolic.grouped+Type+Consciousness+Type+Service+Renal+Infection+CPR+HeartRate.grouped+Previous+Consciousness, method="class", data=ICU)
 #rpart.plot(icutree,
            #extra = 104, # show fitted class, probs, percentages
            #box.palette = "GnYlRd", # color scheme
@@ -1221,4 +1272,52 @@ head(predicted.classes, 12)
 mean(predicted.classes == ICU$Status)
 plotcp(icutree)
 
+par(mfrow=c(1,2)) 
+rsq.rpart(icutree)
+
 ```
+
+### Classification tree built on training data 
+Below is our classification tree built on our training data. While our tree has 3 branches, the X error rises from line 2 to line 3, indicating that our training regression tree needs to be pruned, which according to our cp plot is around 2 splits. 
+```{r}
+icutree.train=rpart(Status~Service+Cancer+Previous+Type+Age.binned+Systolic.grouped+HeartRate.grouped+Consciousness+CPR+Infection+Sex+Renal, method="class", data=train, minsplit=20)
+fancyRpartPlot(icutree.train)
+plotcp(icutree.train)
+par(mfrow=c(1,2)) 
+rsq.rpart(icutree.train) 
+
+```
+
+```{r}
+trainfit<-prune(icutree.train,cp=icutree.train$cptable[which.min(icutree.train$cptable[,"xerror"]),"CP"])
+fancyRpartPlot(trainfit, palettes = "YlOrRd" , caption=NULL  )
+```
+
+###Prediction accuracy of our full model on training data
+According to our results below, the prediction accuracy based on training data is statistically significant, with an 87 percent accuracy for predicting lived and dead patients in the ICU. 
+```{r}
+tree.pred.train.full=predict(icutree.train, newdata=train, type="class")
+
+table_mat_full<-table(train$Status, tree.pred.train.full)
+
+sjt.xtab(train$Status, tree.pred.train.full, var.labels=c("Actual Status", "Predicted Status"), show.row.prc = TRUE)
+
+(accuracy_Train_Test <- sum(diag(table_mat_full)) / sum(table_mat_full))
+```
+
+However, when we build our model on the testing data, we get 72% accuracy, and a non-significant result. 
+```{r}
+tree.pred.test.full = predict(icutree.train, newdata=test, type = "class")
+table_mat_tr_full <- table(test$Status, tree.pred.test.full)
+sjt.xtab(test$Status, tree.pred.test.full, var.labels = c("Actual Status", "Predicted Status"), show.row.prc = TRUE)
+
+(accuracy_Train_Test_full <- sum(diag(table_mat_tr_full)) / sum(table_mat_tr_full))
+```
+
+Finally, the classification rules based on the training sample are below: 
+```{r}
+rpart.rules(trainfit)
+```
+
+Specifically, we should expect 13 percent to die based if consciousness is conscious, and 83 percent to die if consciousness is deep stupor or coma.  
+
