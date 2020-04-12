@@ -18,7 +18,7 @@ output:
     font_family: Times New Roman, Times, serif
     font_size: 2.5em
     linestretch: 1.5
---- hub
+---
 
 ```{r setup, eval=TRUE, include=FALSE}  
 knitr::opts_chunk$set( comment=NA, eval=TRUE,  echo=TRUE, warning=FALSE, message=FALSE, error=FALSE, root.dir = "C:/Users/ekene/Documents/eH705_Project") 
