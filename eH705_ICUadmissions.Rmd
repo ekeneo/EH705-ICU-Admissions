@@ -1,6 +1,6 @@
 ---
 title: "ICU Admissions Term Project, eH705"
-authors: "Ekene Olatunji, Catherine Nassralla, Victoria Chin, Basma Chamas, and Sajiya Somji"
+authors: "Ekene Olatunji, Catherine Nassralla, Victoria Chin, Bassma Chamas, and Sajiya Somji"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
   html_document: 
@@ -42,7 +42,7 @@ knitr::knit_hooks$set(webgl = hook_webgl)
 ```
 
 # Statement of Authorship
-This report is created by Ekene Olatunji, Catherine Nassralla, Victoria Chin, Bassam Chamas, and Sajiya Somji for the eHealth 705 Statistics in eHealth final project.
+This report is created by Ekene Olatunji, Catherine Nassralla, Victoria Chin, Bassma Chamas, and Sajiya Somji for the eHealth 705 Statistics in eHealth final project.
 
 # Executive Summary 
 
@@ -105,7 +105,8 @@ The ICU Admissions dataset consists of 200 observations with 21 variables. From 
   5. There are no missing data.  
   
 
-# Converting Numerical Variables to Factor Variables
+# Recoding Variables
+## Converting Numerical Variables to Factor Variables
 
 Attributes that could be recoded as factors included Status, Sex, Race, Service, Cancer, Renal, Infection, CPR, Previous, Type, Fracture, PCO2, PH, PO2, Bicarbonate, Creatinine and Consciousness. Labelling the factor levels with level names helps with comparative analysis and visualization. 
 
@@ -169,9 +170,9 @@ ICU <-
 # write.csv(ICU, file="ICUAdmissions_recoded.csv", row.names=FALSE)
 ```
 
-# Data Exploration - Statistical summaries and Graphing of variables
+# Data Exploration - Statistical Summaries and Graphing of Variables
 
-## Viewing a few rows of the recorded dataset
+## Preview of Recoded Dataset
 
 Below is a table containing results from the first and last four variables in this dataset.
 
@@ -260,6 +261,13 @@ library(Rmisc)
 multiplot(f01, f02, f03, f04,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ```
 
+**Observation**
+
+ * Due to the increased ratio in the population ofmale to female, the ratio of the number of patients who lived is found almost directly proportional between male and female.
+ * From the graph regarding vital Status by race, it can be seen that the patient population of the White race is higher than the patient count for Black and other races. Overall, in the different races there are more cases of patients that lived than died.
+ * For the Vital status by Service, we can also observe that more patient died receiving medical service than surgical service.
+ * In the case of the Vital status by Cancer graph, there are more patients without a present case of Cancer, however there are als more patients who died and do not have a present case of Cancer.
+
 ```{r}
 
 f05<-ggplot(ICU, aes(x=Renal, fill = Status)) +
@@ -289,6 +297,14 @@ f08<-ggplot(ICU, aes(x=Previous, fill = Status)) +
 library(Rmisc)
 multiplot(f05, f06, f07, f08,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ``` 
+
+**Observation**
+
+ * For the Vital Status by Renal, there are more patients without history of chronic Renal failure and most of then lived however, it is also observed that there seems to be an equal proportion in Status of patients who had an history with chronic Renal failure.
+ * In the case of Vital status by Infection, it can be observed that there are more cases of patients that lived than died regardless of if they have infection or not. However, there are more cases of patients who probably had infections and died.
+ * For the vital Status by CPR, it can be observed that there are more patients who were admitted in the ICU without prior CPR but there is the likelihood of patients dying with prior CPR.
+ * The visualization of Vital Status by Previous shows that there are more patients without previous ICU admission and the cases of patients who died was low.
+
 
 ```{r}
 
@@ -320,6 +336,13 @@ library(Rmisc)
 multiplot(f09, f10, f11, f12,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ```
 
+** Observation
+ * For the Vital Status by Type, there are more patients with emergency ICU admission and those also expereince more cases of death than the elective ICU admissions.
+ * In the case of Vital status by Fracture, it can be observed that there are more cases of patients that lived than died regardless of if they have Fracture or not.  * For the vital Status by PO2, it can be observed that there are more patients who were admitted in the ICU without PO2 but there is the likelihood of patients dying with having PO2.
+ * The visualization of Vital Status by PH shows that there are more patients without a dangerous level of PH and the cases of patients who died was low.
+
+
+
 ```{r}
 f13<-ggplot(ICU, aes(x=PCO2, fill = Status)) +
  theme_bw() +
@@ -350,12 +373,9 @@ library(Rmisc)
 multiplot(f13, f14, f15, f16, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ```
 
-## Observations
+**Observations**
 
-  - The number of patient who live is higher than the population who died
-  - More Patients from the population aged 50 and above died in both male and female
-  - The female population experienced more death than men of the same age bracket as 
-  - The density plot is peaked at the top at the age 75 for both male and female meaning more patients aged 75 died.
+From the collection of graphs above, the most visually prominent chart is the relationship between vital status and Consciousness which shows that although there is a high count of patients who were conscious at admission, however most patients that were received at a stage of Deep Stupor or Coma lost consciousness and died.
 
 
 # Uniform Distribution   
@@ -367,10 +387,10 @@ knitr::include_graphics("./eHealth 705 statkey chisq 1df.png")
 ```
 
 For Categorical variables with two categories:    
-_H0_: the attribute is distributed uniformally, the chi squared value does not exceed the hypothesized  value of 3.841 (p = 0.05)    
-_Ha_: the attribute is not distiributed uniformally, The chi squared value exceeds the hypothesized value of 3.841    
+__H0__: the attribute is distributed uniformally, the chi squared value does not exceed the hypothesized  value of 3.841 (p = 0.05)    
+__Ha__: the attribute is not distiributed uniformally, The chi squared value exceeds the hypothesized value of 3.841    
 
-Chi squared test - Status:  
+__Chi squared test - Status__:  
 
 The chi squared test for Status returns a chi squared value above the null hypothesized value with a very small p value (<0.05), indicating that there is a very low risk of Type I error if the null hypothesis is rejected. It can be concluded that Status is not uniformally distributed and that statistically more individuals lived than died on admission to the ICU.  
 
@@ -387,7 +407,7 @@ local({
 })
 ```
 
-Chi squared test - CPR:   
+__Chi squared test - CPR__:   
 
 Similarly, the chi squared test for CPR returns a very high chi squared value at 151, and a low p value, allowing us to reject the null hypothesis that this attribute is uniformally distributed. More individuals did not have CPR than did before ICU admission. In fact, as seen from the table below, few individuals received CPR at all, which might make it a poor predictor of ICU outcomes.
 
@@ -408,7 +428,7 @@ local({
 table(ICU$CPR, ICU$Status)
 ```
 
-Chi squared test - Infection:   
+__Chi squared test - Infection__:   
  
 The chi squared value produced from this test is only slightly higher than the null hypothesized value, with a p value of 0.024, indicating a 2.4% chance of a Type I error if the null hypothesis is rejected. While the distribution can be concluded to not be uniform based on the threshold set with the null hypothesis, the uniformity of Infection among patients admitted to the ICU could be explored in further research. It should be noted that in the group of individuals who died, more had infections than not.  
 
@@ -429,7 +449,7 @@ local({
 table(ICU$Infection, ICU$Status)
 ```
 
-Chi squared test - Previous:   
+__Chi squared test - Previous__:   
 
 The chi squared value here exceeds the null hypothesized value with a p value much smaller than 0.05, allowing us to reject the null hypothesis that this attribute is uniformally distributed. More individuals in both status categories did not have a previous ICU admission. 
 
@@ -446,7 +466,7 @@ local({
 })
 ```
 
-Chi squared test - Sex:   
+__Chi squared test - Sex__:   
 
 The chi squared value returned from this test is 11.52, which is not as far from the null hypothesized value as some of the other values generated from other tests. The value and p value of 0.00069 still indicated that the null hypothesis should be reject and that Sex is not uniformally distributed. There are more men in this dataset than females.   
 
@@ -465,7 +485,7 @@ local({
 
 In both sex categories, despite the inequality in the number of observations in each group, there are still more individuals who lived than died. 
 
-Chi squared test - Type:
+__Chi squared test - Type__:
 
 The distribution of Type can be concluded to be non-uniform as the null hypothesis should be rejected based on the chi squared value produced and low p value. As seen in exploratory data analysis, the there are more individuals who are had emergency admissions than elective admissions. This difference in distribution is statistically significant. Fewer individuals died when they were admitted to the ICU on an elective basis.  
 
@@ -482,7 +502,7 @@ local({
 })
 ```
 
-Chi squared test - Service:
+__Chi squared test - Service__:
 
 The distribution of Service is uniform based on the null hypothesis of a chi squared variable of 3.841. The chi squared value here indicates that there is not a significant difference between a uniform distribution and the distributio not Service. This means that there was no significant difference between the number of individuals admitted who had medical or surgical services performed, as the p value indicates a 32% risk of incorrectly rejecting the null hypothesis. 
 
@@ -520,14 +540,14 @@ table(ICU$Renal, ICU$Status)
 ```
 
 For Categorical variables with three categories:    
-_Ho_: the attribute is distributed uniformally, the chi squared value does not exceed the hypothesized  value of 5.992 (p = 0.05)    
-_Ha_: the attribute is not distiributed uniformally, The chi squared value exceeds the hypothesized value of 5.992 (p=0.05)    
+__H0__: the attribute is distributed uniformally, the chi squared value does not exceed the hypothesized  value of 5.992 (p = 0.05)    
+__Ha__: the attribute is not distiributed uniformally, The chi squared value exceeds the hypothesized value of 5.992 (p=0.05)    
 
 ```{r echo=FALSE, fig.cap= "Theoretical chi square distribution with 2 degrees of freedom", out.width="70%" }
 knitr::include_graphics("./eHealth 705 statkey chisq 2df.png")
 ```
 
-Chi squared test - Consciousness
+__Chi squared test - Consciousness__:
 
 The null hypothesis for this attribute's distribution is that an equal number of observations will be found in each category of Consciousness. The chi squared value produced by this test exceeds the null hypothesized value with a low p value, indicating that the observations in this category are statistically not uniform. This could have been guessed from counts of observations in each category, where most individuals were in the conscious category. 
 
@@ -546,12 +566,12 @@ local({
 })
 ```
 
-## Normal Distribution
+# Normal Distribution
 
 Distribution of the three numerical variables in the ICU dataset was evaluated using quantile-quantile plots and the Shapiro-Wilk's test for normality. Confidence intervals will be produced for the means of each attribute.   
 
-_H0_: Age, HeartRate and Systolic are normally distributed   
-_Ha_: Age, HeartRate and Systolic are not normally distributed 
+__H0__: Age, HeartRate and Systolic are normally distributed   
+__Ha__: Age, HeartRate and Systolic are not normally distributed 
 
 Tests of normality - Age:     
 
@@ -610,7 +630,10 @@ ggplot(ICU, aes(x=Age)) +
  annotate("text", x=0.8, y=-0.001, label="Base=315",  size=4)
 ```
 
+### Cancer by Age
+
 There are three peaks of Ages where ICU admissions involved cancer. These are around 20, 50 and 70 years of age. Given the relatively small number of individuals who had cancer involvement with their admission, and the variability in ages associated, cancer might not be the best predictor of ICU admission. 
+
 
 ```{r}
 ggplot(ICU, aes(x=Age, fill = Cancer)) +
@@ -630,6 +653,8 @@ ggplot(ICU, aes(x=Age, fill = Infection )) +
        title = "Density distribution of Infection by Age")
 ```
 
+### Consciousness by Age
+
 Another association that was explored was between Age and Consiousness. All three categories for Consciousness overlap with peaks between 50 and 75 years of age. There is a distinct peak at around 50 for deep stupor, indicating that this age might be associated with deep stupor when related to ICU admissions. However, deep stupor also has a secondary peak at around 75, which make it less clearly how this consciousness category relates to age in this dataset. 
 
 ```{r}
@@ -639,6 +664,8 @@ ggplot(ICU, aes(x=Age, fill = Consciousness )) +
   labs(y = "Density",
        title = "Density distribution of Consciousness by Age")
 ```
+
+### Type by Age
 
 Both admission Types, elective and emergency, happen more frequently with advancing age. However, elective admissions happen more frequently with older age. This might suggest that older individuals are more likely to have complications during surgical or other procedures that would require admissions to an intensive care unit. Depending on organizational policy or practice, this might also mean that individuals at the study site were premptively admitted to ICU, perhaps more frequently with advancing age, for fear of complications. 
 
@@ -650,6 +677,8 @@ ggplot(ICU, aes(x=Age, fill = Type )) +
        title = "Density distribution of Type by Age")
 ```
 
+### Service by Age
+
 While the peaks for surgical and medical Service by Age overlap considerably, there is interestingly a peak of surgical service type in younger age groups, around 20 years of age. While it is not known what conditions led to these individuals being admitted, it might be concluded that older individual would have more events that were related to their medication or needing medication, for example falls or stroke. This is a very weak conclusion to draw from the graph below, but if specific reasons for admission were also collected, this theory could be explored. 
 
 ```{r}
@@ -660,7 +689,11 @@ ggplot(ICU, aes(x=Age, fill = Service)) +
        title = "Density distribution of Service by Age")
 ```
 
-There is a definite an almost independent peak of history of previous ICU admission with older age. It can be noted that there is a smaller peak of relatively older individuals who were admitted who had not had a previous ICU admission. This indicates that old age does not relate clearly to previous ICU admission and future ICU admission. On the extremes of age, younger individuals are shown to have less frequency of previous ICU admission, while there is a small peak of older admission of the individuals in this dataset having had a previous ICU admission. There might be a smaller increased likelihood of ICU admission with previous ICU admission with age. 
+
+### Previous by Age
+
+There is a definite and almost independent peak of history of previous ICU admission with older age. It can be noted that there is a smaller peak of relatively older individuals who were admitted who had not had a previous ICU admission. This indicates that old age does not relate clearly to previous ICU admission and future ICU admission. On the extremes of age, younger individuals are shown to have less frequency of previous ICU admission, while there is a small peak of older admission of the individuals in this dataset having had a previous ICU admission. There might be a smaller increased likelihood of ICU admission with previous ICU admission with age. 
+
 ```{r}
 ggplot(ICU, aes(x=Age, fill = Previous )) +
   theme_bw() +
@@ -678,7 +711,7 @@ ggplot(ICU, aes(x=Age, fill = Renal )) +
        title = "Density distribution of Renal by Age")
 ```
 
-### Age by Sex
+### Sex by Age
 
 From the plot below, it seems that females who were admitted to the ICU were older than their male counterparts. There are similar peaks and patterns for younger individuals: females were older if admitted to ICU than their male counterparts.
 ```{r}
@@ -689,11 +722,11 @@ ggplot(ICU, aes(x=Age, fill = Sex)) +
        title = "Density distribution of Sex by Age")
 ```
 
-__Ho:__ the variances for Lived and Died are equal  
-__Ha:__ the variances are different
+__H0__: the variances for Lived and Died are equal  
+__Ha__: the variances are different
 
-__Ho:__ the means are equal  
-__Ha:__ the means are different
+__H0__: the means are equal  
+__Ha__: the means are different
 
 The following is the comparison of variances between the two Sex groups for Age.
 
@@ -716,7 +749,7 @@ qt(c(0.025), df=314, lower.tail=TRUE)
 As the p-value = 0.1759, 0 is within the confidence intervals of -9.708824 to 1.789469 and t = -1.3582 is greater than - 1.9675, we retain the null hypothesis at a 5% risk level of a type 1 error and conclude that the means for systolic blood pressure are the same between the two groups.
 
 
-### Age by Status
+### Status by Age
 Overlaying Status and Age, density plots show that deaths after admission follow the larger Age peak that contains middle aged to elderly individuals. 
 
 ```{r}
@@ -740,11 +773,11 @@ ggplot(ICU, aes(x=Age, fill = Status)) +
         title = "Density distribution of Vital Status in male and female patients by Age")
 ```
 
-__Ho:__ the variances for Lived and Died are equal  
-__Ha:__ the variances are different
+__H0__: the variances for Lived and Died are equal  
+__Ha__: the variances are different
 
-__Ho:__ the means are equal  
-__Ha:__ the means are different
+__H0__: the means are equal  
+__Ha__: the means are different
 
 The following is the comparison of variances between the two Status groups for Age.
 
@@ -781,7 +814,7 @@ Using a density estimate plot, the distribution of HeartRate was produced. The m
  annotate("text", x=0.8, y=-0.001, label="Base=315",  size=4)
 ```
 
-### HeartRate by Status
+### Vital Status by Heart Rate
 
 Both status categories have similar peaks when plotted on a density estimate plot of HeartRate. This indicates that there might not be a difference in the Status response category based on HeartRate. People who lived did seem to have a higher density of HeartRate values around 90 than those who died. A normal adult heart rate ranges between 60 and 100 beats per minute. This graph might suggest that people who lived more often had heart rates within this range, whereas those who died seemed more likely to have higher heartrates. This could inform further analysis or research. 
 
@@ -790,14 +823,14 @@ ggplot(ICU, aes(x=HeartRate, fill = Status)) +
   theme_bw() +
       geom_density(alpha=0.5) +
   labs(y = "Density",
-       title = "Density distribution of Vital Status HeartRate")
+       title = "Density distribution of Vital Status by HeartRate")
 ```
 
-__Ho:__ the variances for Lived and Died are equal  
-__Ha:__ the variances are different
+__H0__: the variances for Lived and Died are equal  
+__Ha__: the variances are different
 
-__Ho:__ the means are equal  
-__Ha:__ the means are different
+__H0__: the means are equal  
+__Ha__: the means are different
 
 The following is the comparison of variances between the two Status groups for HeartRate.
 ```{r}
@@ -832,7 +865,7 @@ ggplot(ICU, aes(x=Systolic)) +
  annotate("text", x=0.8, y=-0.001, label="Base=315",  size=4)
 ```
 
-### Systolic by Status
+### Status by Systolic
 The distribution of Systolic values for those who died seem to be concentrated around 75 mmHg and 140mmHg. A normal Systolic blood pressure can vary widely but the American Heart Association states that blood pressure below 120mmHg is normal. However, excessively low blood pressure could be a result of bleeding, for example, and can result in insufficient blood flow to critical organs. Medications used to restore blood pressure are used when blood pressure becomes too low. This might explain the peak around 75mmHg in the death curve in the graph below. 
 
 ```{r}
@@ -842,11 +875,11 @@ ggplot(ICU, aes(x=Systolic, fill = Status)) +
   labs(y = "Density",
        title = "Density distribution of Vital Status Systolic")
 ```
-__Ho:__ the variances for Lived and Died are equal  
-__Ha:__ the variances are different  
+__H0__: the variances for Lived and Died are equal  
+__Ha__: the variances are different  
 
-__Ho:__ the means are equal  
-__Ha:__ the means are different
+__H0__: the means are equal  
+__Ha__: the means are different
 
 The following is the comparison of variances between the two Status groups for Systolic.
 ```{r}
@@ -873,8 +906,8 @@ We will conduct z-tests between two categorical variables where the dependent va
 
 Vital status by Service
 
-Ho: there is no difference between the proportion of patients that died in the medical versus surgical group, risk = 0.05
-Ha: there is a difference between the proportion of patients that died in the medical versus surgical group
+__H0__: there is no difference between the proportion of patients that died in the medical versus surgical group, risk = 0.05
+__Ha__: there is a difference between the proportion of patients that died in the medical versus surgical group
 
 ```{r}
 pacman::p_load(sjPlot)
@@ -900,8 +933,8 @@ Lastly, we can see from the table that more of those that died were there for a 
 
 Vital status by Cancer
 
-Ho: there is no difference between the proportions of patients that died in the cancer versus non-cancer group, risk = 0.05
-Ha: there is a difference between the proportions of patients that died in the cancer versus non-cancer group
+__H0__: there is no difference between the proportions of patients that died in the cancer versus non-cancer group, risk = 0.05
+__Ha__: there is a difference between the proportions of patients that died in the cancer versus non-cancer group
 
 ```{r}
 pacman::p_load(sjPlot)
@@ -927,8 +960,8 @@ Thus, there are equal proportions of those who died with cancer as part of the p
 
 Vital status by Previous
 
-Ho: there is no difference between the proportion of patients that died with versus without previous admission to an ICU within 6 months, risk = 0.05
-Ha: there is a difference between the proportion of patients that died with versus without previous admission to an ICU within 6 months
+__H0__: there is no difference between the proportion of patients that died with versus without previous admission to an ICU within 6 months, risk = 0.05
+__Ha__: there is a difference between the proportion of patients that died with versus without previous admission to an ICU within 6 months
 
 ```{r}
 pacman::p_load(sjPlot)
@@ -983,8 +1016,8 @@ We will now conduct a prop.test for categorical variables where the independent 
 
 Vital status by Age
 
-Ho: there is no difference between the proportion of patients that died across the 5 age groups, risk = 0.05
-Ha: the proportion of patients that died is different in at least one of the 5 age groups
+__H0__: there is no difference between the proportion of patients that died across the 5 age groups, risk = 0.05
+__Ha__: the proportion of patients that died is different in at least one of the 5 age groups
 
 
 ```{r}
@@ -1005,8 +1038,8 @@ Further, when conducting a chi-square test with a 5% level of risk of a type 1 e
 
 Vital status by Systolic Blood Pressure
 
-Ho: there is no difference between the proportion of patients that died across the 6 systolic blood pressure level groups, risk = 0.05
-Ha: the proportion of patients that died is different in at least one of the 6 systolic blood pressure level groups
+__H0__: there is no difference between the proportion of patients that died across the 6 systolic blood pressure level groups, risk = 0.05
+__Ha__: the proportion of patients that died is different in at least one of the 6 systolic blood pressure level groups
 
 
 ```{r}
@@ -1026,8 +1059,8 @@ Further, when conducting a chi-square test with a 5% level of risk of a type 1 e
 
 Vital status by Heart Rate
 
-Ho: there is no difference between the proportion of patients that died across the bradychardia, normal heart rate and elevated heart rate groups, risk = 0.05
-Ha: the proportion of patients that died is different in at least one of the 3 heart rate categories
+__H0__: there is no difference between the proportion of patients that died across the bradychardia, normal heart rate and elevated heart rate groups, risk = 0.05
+__Ha__: the proportion of patients that died is different in at least one of the 3 heart rate categories
 
 
 ```{r}
@@ -1047,8 +1080,8 @@ Further, when conducting a chi-square test with a 5% level of risk of a type 1 e
 
 Vital status by Race
 
-Ho: there is no difference between the proportion of patients that died that were White, Black or otherwise, risk = 0.05
-Ha: the proportion of patients that died is different in at least one of the race categories
+__H0__: there is no difference between the proportion of patients that died that were White, Black or otherwise, risk = 0.05
+__Ha__: the proportion of patients that died is different in at least one of the race categories
 
 ```{r}
 pacman::p_load(sjPlot)
@@ -1069,8 +1102,8 @@ When looking at the sample estimates and at the table, we see that there was alm
 
 Vital status by Consciousness
 
-Ho: there is no difference between the proportion of patients that died across the Conscious, Deep Stupor and Coma groups, risk = 0.05
-Ha: the proportion of patients that died is different in at least one of the Conscious, Deep Stupor and Coma groups
+__H0__: there is no difference between the proportion of patients that died across the Conscious, Deep Stupor and Coma groups, risk = 0.05
+__Ha__: the proportion of patients that died is different in at least one of the Conscious, Deep Stupor and Coma groups
 
 ```{r}
 pacman::p_load(sjPlot)
@@ -1128,9 +1161,10 @@ sjt.xtab(ICU$Status, ICU$Bicarbonate, show.col.prc = TRUE)
 sjt.xtab(ICU$Status, ICU$Creatinine, show.col.prc = TRUE)
 sjt.xtab(ICU$Status, ICU$Consciousness, show.col.prc = TRUE)
 ```
+
 Statistically significant crosstabs include: Creatinine, Type, CPR, Infection,Renal, Service. 
 
-## Logistic Regression 
+# Logistic Regression 
 Prior to conducting a logistic regression, we would like to break down the systolic blood pressure into levels. We will use clinically defined levels for hypo, normal, elevated and hyper. Ranges below 90 are considered hypo, whereas ranges from 90 to 120 are considered normal, ranges between 120 and 129 are considered elevated, and 130 plus are considered hyper. 
 
 ```{r}
@@ -1149,7 +1183,7 @@ exp(coef(ICU.m))
 ```
 
 
-### Final model 
+## Final model 
 
 ```{r}
 ICU.final.m<-glm(formula=Status~Age+Cancer+Systolic+PCO2+Consciousness+Type, family=binomial(logit),data=ICU)
@@ -1172,7 +1206,7 @@ ICU.tr<-glm(Status~Age+Cancer+Systolic+PCO2+Consciousness+Type, family=binomial(
 summary(ICU.tr)
 ```
 
-### Testing & training the model 
+## Testing & training the model 
 ```{r}
 predicted.val<-predict(ICU.tr, newdata=test)
 head(predicted.val)
