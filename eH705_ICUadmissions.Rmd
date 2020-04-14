@@ -1197,7 +1197,6 @@ plot_model(
   show.p = TRUE
 )  + ylim(0, 800)
 
-#ICU.tr$fitted.values[6:10]
 ```
 
 With regards to the multicollinearity present within the model, according to the VIFs below, none are equal to 4, thus demonstrating the lack of multicollinarity in this model. 
