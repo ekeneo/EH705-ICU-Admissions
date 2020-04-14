@@ -298,7 +298,7 @@ library(Rmisc)
 multiplot(f05, f06, f07, f08,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ``` 
 
-**Observation**
+**Observation**  
 
  * For the Vital Status by Renal, there are more patients without history of chronic Renal failure and most of then lived however, it is also observed that there seems to be an equal proportion in Status of patients who had an history with chronic Renal failure.
  * In the case of Vital status by Infection, it can be observed that there are more cases of patients that lived than died regardless of if they have infection or not. However, there are more cases of patients who probably had infections and died.
@@ -336,9 +336,11 @@ library(Rmisc)
 multiplot(f09, f10, f11, f12,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ```
 
-** Observation
- * For the Vital Status by Type, there are more patients with emergency ICU admission and those also expereince more cases of death than the elective ICU admissions.
- * In the case of Vital status by Fracture, it can be observed that there are more cases of patients that lived than died regardless of if they have Fracture or not.  * For the vital Status by PO2, it can be observed that there are more patients who were admitted in the ICU without PO2 but there is the likelihood of patients dying with having PO2.
+**Observation**  
+
+ * For the Vital Status by Type, there are more patients with emergency ICU admission and those also expereince more cases of death than the elective ICU admissions.  
+ * In the case of Vital status by Fracture, it can be observed that there are more cases of patients that lived than died regardless of if they have Fracture or not.    
+ * For the vital Status by PO2, it can be observed that there are more patients who were admitted in the ICU without PO2 but there is the likelihood of patients dying with having PO2.  
  * The visualization of Vital Status by PH shows that there are more patients without a dangerous level of PH and the cases of patients who died was low.
 
 
@@ -630,7 +632,6 @@ ggplot(ICU, aes(x=Age)) +
  annotate("text", x=0.8, y=-0.001, label="Base=315",  size=4)
 ```
 
-<<<<<<< HEAD
 
 __Critical Values for Difference in Means__  
 Critical values to assess differences in means are based on a degrees of freedom of 199.
@@ -642,11 +643,6 @@ qt(c(0.025), df=199, lower.tail=FALSE)
 
 ## Cancer by Age
 There are three peaks for Ages where ICU admissions involved cancer. These are around 20, 50 and 70 years of age. Given the relatively small number of individuals who had cancer involvement with their admission, and the variability in ages associated, cancer might not be the best predictor of ICU admission. 
-=======
-### Cancer by Age
-
-There are three peaks of Ages where ICU admissions involved cancer. These are around 20, 50 and 70 years of age. Given the relatively small number of individuals who had cancer involvement with their admission, and the variability in ages associated, cancer might not be the best predictor of ICU admission. 
->>>>>>> master
 
 
 ```{r}
@@ -830,7 +826,6 @@ ggplot(ICU, aes(x=Age, fill = Service)) +
        title = "Density distribution of Service by Age")
 ```
 
-<<<<<<< HEAD
 __Difference in Means__  
 
 __H0__: the variances for medical and surgical are equal  
@@ -863,13 +858,7 @@ t.test(Age~Service, alternative='two.sided', conf.level=.95, var.equal=TRUE, dat
 
 There is a definite an almost independent peak of history of previous ICU admission with older age. It can be noted that there is a smaller peak of relatively older individuals who were admitted who had not had a previous ICU admission within the past 6 months. This indicates that old age does not relate clearly to previous ICU admission and future ICU admission. On the extremes of age, younger individuals are shown to have less frequency of previous ICU admission within the past 6 months, while there is a small peak of older admission of the individuals in this dataset having had a previous ICU admission in the past 6 months. There might be a smaller increased likelihood of ICU admission with previous ICU admission in the past 6 months with age. 
 
-=======
 
-### Previous by Age
-
-There is a definite and almost independent peak of history of previous ICU admission with older age. It can be noted that there is a smaller peak of relatively older individuals who were admitted who had not had a previous ICU admission. This indicates that old age does not relate clearly to previous ICU admission and future ICU admission. On the extremes of age, younger individuals are shown to have less frequency of previous ICU admission, while there is a small peak of older admission of the individuals in this dataset having had a previous ICU admission. There might be a smaller increased likelihood of ICU admission with previous ICU admission with age. 
-
->>>>>>> master
 ```{r}
 ggplot(ICU, aes(x=Age, fill = Previous )) +
   theme_bw() +
@@ -878,7 +867,6 @@ ggplot(ICU, aes(x=Age, fill = Previous )) +
        title = "Density distribution of Previous by Age")
 ```
 
-<<<<<<< HEAD
 __Difference in Means__  
 
 __H0__: the variances for previous admission within the past 6 months and no previous admission within the past 6 months are equal  
@@ -908,8 +896,8 @@ t.test(Age~Previous, alternative='two.sided', conf.level=.95, var.equal=TRUE, da
 
 
 
-## Sex by Age
-=======
+## Renal by Age
+
 The plot of density distribution of the two renal categories by Age indicates that both Status groups had a higher frequency of chronic renal failure as age progressed, and peaked at around 70-75 years of age. There is a small peaks at 20 and a smaller peak at about 30 years of age for individuals who did not have chronic renal failure and did have chronic renal failure on admission, respectively. The amount of overlap in the peaks confirms the results of the previous table above indicating that the Renal attribute might not give more insight into ICU outcomes.  
 ```{r}
 ggplot(ICU, aes(x=Age, fill = Renal )) +
@@ -919,8 +907,32 @@ ggplot(ICU, aes(x=Age, fill = Renal )) +
        title = "Density distribution of Renal by Age")
 ```
 
-### Sex by Age
->>>>>>> master
+__Difference in Means__  
+__H0__: the variances for history of chronic renal failure and no history
+__Ha__: the variances are different
+
+__H0__: the means are equal  
+__Ha__: the means are different
+
+The following is the comparison of means and variances between the history of chronic renal failue and no history for Age.
+
+```{r}
+numSummary(ICU[,c("Age"), drop=FALSE], groups=ICU$Renal, statistics=c("mean","sd", "se(mean)"), quantiles=c(0,.25,.5,.75,1))
+```
+
+Since the p-value = 0.1385 for testing the homogeneity of variances is greater than 0.05, we retain the null hypothesis with a 5% risk of a type 1 error and conclude that the variances for history and no history are equal. As such, the Student t-test is used to analyze whether there was a significant difference in means.
+
+```{r}
+leveneTest(Age ~ Renal, data=ICU, center="median")
+```
+As the p-value = 0.02685, 0 is not within the confidence intervals of -20.123596 to -1.236684 and t = -2.2303 is less than -1.971957, we reject the null hypothesis at a 5% risk level of a type 1 error and conclude that the means for Renal are not the same between the two groups. 
+```{r}
+t.test(Age~Renal, alternative='two.sided', conf.level=.95, var.equal=TRUE, data=ICU)
+```
+
+
+## Sex by Age
+
 
 From the plot below, it seems that females who were admitted to the ICU were older than their male counterparts. There are similar peaks and patterns for younger individuals: females were older if admitted to ICU than their male counterparts.
 ```{r}
@@ -1107,13 +1119,13 @@ t.test(Systolic~Status, alternative="two.sided", conf.level=.95, var.equal=FALSE
 
 
 
-# Difference in proportions
+# Difference in Proportions
 
 We will conduct z-tests between two categorical variables where the dependent variable is Vital status and the independent variable is binary.
 
 ## Vital status by Service
 
-__H0__: there is no difference between the proportion of patients that died in the medical versus surgical group, risk = 0.05
+__H0__: there is no difference between the proportion of patients that died in the medical versus surgical group, risk = 0.05  
 __Ha__: there is a difference between the proportion of patients that died in the medical versus surgical group
 
 ```{r}
@@ -1140,7 +1152,7 @@ Lastly, we can see from the table that more of those that died were there for a 
 
 ## Vital status by Cancer
 
-__H0__: there is no difference between the proportions of patients that died in the cancer versus non-cancer group, risk = 0.05
+__H0__: there is no difference between the proportions of patients that died in the cancer versus non-cancer group, risk = 0.05  
 __Ha__: there is a difference between the proportions of patients that died in the cancer versus non-cancer group
 
 ```{r}
@@ -1167,7 +1179,7 @@ Thus, there are equal proportions of those who died with cancer as part of the p
 
 ## Vital status by Previous
 
-__H0__: there is no difference between the proportion of patients that died with versus without previous admission to an ICU within 6 months, risk = 0.05
+__H0__: there is no difference between the proportion of patients that died with versus without previous admission to an ICU within 6 months, risk = 0.05  
 __Ha__: there is a difference between the proportion of patients that died with versus without previous admission to an ICU within 6 months
 
 ```{r}
@@ -1223,7 +1235,7 @@ We will now conduct a prop.test for categorical variables where the independent 
 
 ## Vital status by Age
 
-__H0__: there is no difference between the proportion of patients that died across the 5 age groups, risk = 0.05
+__H0__: there is no difference between the proportion of patients that died across the 5 age groups, risk = 0.05  
 __Ha__: the proportion of patients that died is different in at least one of the 5 age groups
 
 
@@ -1245,7 +1257,7 @@ Further, when conducting a chi-square test with a 5% level of risk of a type 1 e
 
 ## Vital status by Systolic Blood Pressure
 
-__H0__: there is no difference between the proportion of patients that died across the 6 systolic blood pressure level groups, risk = 0.05
+__H0__: there is no difference between the proportion of patients that died across the 6 systolic blood pressure level groups, risk = 0.05  
 __Ha__: the proportion of patients that died is different in at least one of the 6 systolic blood pressure level groups
 
 
@@ -1266,7 +1278,7 @@ Further, when conducting a chi-square test with a 5% level of risk of a type 1 e
 
 ## Vital status by Heart Rate
 
-__H0__: there is no difference between the proportion of patients that died across the bradychardia, normal heart rate and elevated heart rate groups, risk = 0.05
+__H0__: there is no difference between the proportion of patients that died across the bradychardia, normal heart rate and elevated heart rate groups, risk = 0.05  
 __Ha__: the proportion of patients that died is different in at least one of the 3 heart rate categories
 
 
@@ -1287,7 +1299,7 @@ Further, when conducting a chi-square test with a 5% level of risk of a type 1 e
 
 ## Vital status by Race
 
-__H0__: there is no difference between the proportion of patients that died that were White, Black or otherwise, risk = 0.05
+__H0__: there is no difference between the proportion of patients that died that were White, Black or otherwise, risk = 0.05  
 __Ha__: the proportion of patients that died is different in at least one of the race categories
 
 ```{r}
@@ -1309,7 +1321,7 @@ When looking at the sample estimates and at the table, we see that there was alm
 
 ## Vital status by Consciousness
 
-__H0__: there is no difference between the proportion of patients that died across the Conscious, Deep Stupor and Coma groups, risk = 0.05
+__H0__: there is no difference between the proportion of patients that died across the Conscious, Deep Stupor and Coma groups, risk = 0.05  
 __Ha__: the proportion of patients that died is different in at least one of the Conscious, Deep Stupor and Coma groups
 
 ```{r}
@@ -1460,7 +1472,7 @@ set.seed(2715)
 
 #final model 
 icutree=rpart(Status~Age+Cancer+Systolic+Type+PCO2+Consciousness+Type+Fracture+Sex+Race+Service+Renal+Infection+CPR+HeartRate+Previous+PO2+PH+Bicarbonate+Creatinine+Consciousness, method="class", data=ICU)
-#rpart.plot(icutree,
+#rpart.plot(icutree, m
            #extra = 104, # show fitted class, probs, percentages
            #box.palette = "GnYlRd", # color scheme
            #prefix = "Status\n",
