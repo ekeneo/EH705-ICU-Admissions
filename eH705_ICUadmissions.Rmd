@@ -1483,9 +1483,7 @@ Further, when conducting a chi-square test with a 5% level of risk of a type 1 e
 
 With a proportion of 1, the Deep Stupor group had the highest proportion of patients that died as all the patients with a deep stupor died. The Coma group has the second highest proportion of patients that died with a sample estimate of 80% dying. The lowest number of deaths was in the group of patients that had no coma or stupor, which is expected. Those with a deep stupor had a higher proportion of deaths than those in a coma.
 
-From the tests of equal proportions, we note that the the following variables had a statistically significant impact on the Vital status of the patient: Service (type of procedure), Type (of admission) and Conciousness.
-
-The following variables were not significant predictors of Vital status of the patient:  Sex, Infection, Renal, CPR, Cancer, Previous (ICU admission within the last 6 months), Age, Systolic Blood Pressure, and Heart rate.
+From the tests of equal proportions, we note that Service (type of procedure), Type (of admission) and Conciousness had a statistically significant impact on the Vital status of patients. On the other hand, Sex, Infection, Renal, CPR, Cancer, Previous (ICU admission within the last 6 months), Age, Systolic Blood Pressure and Heart rate were not significant predictors of Vital status of patients.
 
 
 # Bassma
