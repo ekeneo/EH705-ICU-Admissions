@@ -261,6 +261,13 @@ library(Rmisc)
 multiplot(f01, f02, f03, f04,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ```
 
+**Observation**
+
+ * Due to the increased ratio in the population ofmale to female, the ratio of the number of patients who lived is found almost directly proportional between male and female.
+ * From the graph regarding vital Status by race, it can be seen that the patient population of the White race is higher than the patient count for Black and other races. Overall, in the different races there are more cases of patients that lived than died.
+ * For the Vital status by Service, we can also observe that more patient died receiving medical service than surgical service.
+ * In the case of the Vital status by Cancer graph, there are more patients without a present case of Cancer, however there are als more patients who died and do not have a present case of Cancer.
+
 ```{r}
 
 f05<-ggplot(ICU, aes(x=Renal, fill = Status)) +
@@ -290,6 +297,14 @@ f08<-ggplot(ICU, aes(x=Previous, fill = Status)) +
 library(Rmisc)
 multiplot(f05, f06, f07, f08,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ``` 
+
+**Observation**
+
+ * For the Vital Status by Renal, there are more patients without history of chronic Renal failure and most of then lived however, it is also observed that there seems to be an equal proportion in Status of patients who had an history with chronic Renal failure.
+ * In the case of Vital status by Infection, it can be observed that there are more cases of patients that lived than died regardless of if they have infection or not. However, there are more cases of patients who probably had infections and died.
+ * For the vital Status by CPR, it can be observed that there are more patients who were admitted in the ICU without prior CPR but there is the likelihood of patients dying with prior CPR.
+ * The visualization of Vital Status by Previous shows that there are more patients without previous ICU admission and the cases of patients who died was low.
+
 
 ```{r}
 
@@ -321,6 +336,13 @@ library(Rmisc)
 multiplot(f09, f10, f11, f12,  layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ```
 
+** Observation
+ * For the Vital Status by Type, there are more patients with emergency ICU admission and those also expereince more cases of death than the elective ICU admissions.
+ * In the case of Vital status by Fracture, it can be observed that there are more cases of patients that lived than died regardless of if they have Fracture or not.  * For the vital Status by PO2, it can be observed that there are more patients who were admitted in the ICU without PO2 but there is the likelihood of patients dying with having PO2.
+ * The visualization of Vital Status by PH shows that there are more patients without a dangerous level of PH and the cases of patients who died was low.
+
+
+
 ```{r}
 f13<-ggplot(ICU, aes(x=PCO2, fill = Status)) +
  theme_bw() +
@@ -351,12 +373,9 @@ library(Rmisc)
 multiplot(f13, f14, f15, f16, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 ```
 
-## Observations
+**Observations**
 
-  - The number of patient who live is higher than the population who died
-  - More Patients from the population aged 50 and above died in both male and female
-  - The female population experienced more death than men of the same age bracket as 
-  - The density plot is peaked at the top at the age 75 for both male and female meaning more patients aged 75 died.
+From the collection of graphs above, the most visually prominent chart is the relationship between vital status and Consciousness which shows that although there is a high count of patients who were conscious at admission, however most patients that were received at a stage of Deep Stupor or Coma lost consciousness and died.
 
 
 # Uniform Distribution   
@@ -500,6 +519,26 @@ local({
 })
 ```
 
+Chi squared test- Renal: 
+
+The distribution of renal categories was not uniform, with significantly larger difference from the expected as shown by the chi squared value of 131 which is much larger than the null hypothesized chi squared value. The low p value indicated that it is safe to reject the null hypothesis without concern for Type I error. It can thus be concluded that significantly more people did not have chronic renal failure prior to ICU admission.  
+```{r}
+local({
+  .Table <- with(ICU, table(Renal))
+  cat("\ncounts:\n")
+  print(.Table)
+  cat("\npercentages:\n")
+  print(round(100*.Table/sum(.Table), 
+  2))
+  .Probs <- c(0.5,0.5) 
+  chisq.test(.Table, p=.Probs)
+})
+```
+Additionally, more individuals in both status groups did not have chronic renal failure, indicating that chronic renal failure might not be a factor in worse outcomes during ICU admissions.
+```{r}
+table(ICU$Renal, ICU$Status)
+```
+
 For Categorical variables with three categories:    
 __H0__: the attribute is distributed uniformally, the chi squared value does not exceed the hypothesized  value of 5.992 (p = 0.05)    
 __Ha__: the attribute is not distiributed uniformally, The chi squared value exceeds the hypothesized value of 5.992 (p=0.05)    
@@ -591,6 +630,7 @@ ggplot(ICU, aes(x=Age)) +
  annotate("text", x=0.8, y=-0.001, label="Base=315",  size=4)
 ```
 
+<<<<<<< HEAD
 
 __Critical Values for Difference in Means__  
 Critical values to assess differences in means are based on a degrees of freedom of 199.
@@ -602,6 +642,11 @@ qt(c(0.025), df=199, lower.tail=FALSE)
 
 ## Cancer by Age
 There are three peaks for Ages where ICU admissions involved cancer. These are around 20, 50 and 70 years of age. Given the relatively small number of individuals who had cancer involvement with their admission, and the variability in ages associated, cancer might not be the best predictor of ICU admission. 
+=======
+### Cancer by Age
+
+There are three peaks of Ages where ICU admissions involved cancer. These are around 20, 50 and 70 years of age. Given the relatively small number of individuals who had cancer involvement with their admission, and the variability in ages associated, cancer might not be the best predictor of ICU admission. 
+>>>>>>> master
 
 
 ```{r}
@@ -785,6 +830,7 @@ ggplot(ICU, aes(x=Age, fill = Service)) +
        title = "Density distribution of Service by Age")
 ```
 
+<<<<<<< HEAD
 __Difference in Means__  
 
 __H0__: the variances for medical and surgical are equal  
@@ -817,6 +863,13 @@ t.test(Age~Service, alternative='two.sided', conf.level=.95, var.equal=TRUE, dat
 
 There is a definite an almost independent peak of history of previous ICU admission with older age. It can be noted that there is a smaller peak of relatively older individuals who were admitted who had not had a previous ICU admission within the past 6 months. This indicates that old age does not relate clearly to previous ICU admission and future ICU admission. On the extremes of age, younger individuals are shown to have less frequency of previous ICU admission within the past 6 months, while there is a small peak of older admission of the individuals in this dataset having had a previous ICU admission in the past 6 months. There might be a smaller increased likelihood of ICU admission with previous ICU admission in the past 6 months with age. 
 
+=======
+
+### Previous by Age
+
+There is a definite and almost independent peak of history of previous ICU admission with older age. It can be noted that there is a smaller peak of relatively older individuals who were admitted who had not had a previous ICU admission. This indicates that old age does not relate clearly to previous ICU admission and future ICU admission. On the extremes of age, younger individuals are shown to have less frequency of previous ICU admission, while there is a small peak of older admission of the individuals in this dataset having had a previous ICU admission. There might be a smaller increased likelihood of ICU admission with previous ICU admission with age. 
+
+>>>>>>> master
 ```{r}
 ggplot(ICU, aes(x=Age, fill = Previous )) +
   theme_bw() +
@@ -825,6 +878,7 @@ ggplot(ICU, aes(x=Age, fill = Previous )) +
        title = "Density distribution of Previous by Age")
 ```
 
+<<<<<<< HEAD
 __Difference in Means__  
 
 __H0__: the variances for previous admission within the past 6 months and no previous admission within the past 6 months are equal  
@@ -855,6 +909,18 @@ t.test(Age~Previous, alternative='two.sided', conf.level=.95, var.equal=TRUE, da
 
 
 ## Sex by Age
+=======
+The plot of density distribution of the two renal categories by Age indicates that both Status groups had a higher frequency of chronic renal failure as age progressed, and peaked at around 70-75 years of age. There is a small peaks at 20 and a smaller peak at about 30 years of age for individuals who did not have chronic renal failure and did have chronic renal failure on admission, respectively. The amount of overlap in the peaks confirms the results of the previous table above indicating that the Renal attribute might not give more insight into ICU outcomes.  
+```{r}
+ggplot(ICU, aes(x=Age, fill = Renal )) +
+  theme_bw() +
+      geom_density(alpha=0.5) +
+  labs(y = "Density",
+       title = "Density distribution of Renal by Age")
+```
+
+### Sex by Age
+>>>>>>> master
 
 From the plot below, it seems that females who were admitted to the ICU were older than their male counterparts. There are similar peaks and patterns for younger individuals: females were older if admitted to ICU than their male counterparts.
 ```{r}
@@ -1302,6 +1368,7 @@ sjt.xtab(ICU$Status, ICU$Bicarbonate, show.col.prc = TRUE)
 sjt.xtab(ICU$Status, ICU$Creatinine, show.col.prc = TRUE)
 sjt.xtab(ICU$Status, ICU$Consciousness, show.col.prc = TRUE)
 ```
+
 Statistically significant crosstabs include: Creatinine, Type, CPR, Infection,Renal, Service. 
 
 # Logistic Regression 
