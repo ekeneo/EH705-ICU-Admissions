@@ -1112,21 +1112,10 @@ sjt.xtab(ICU$Status, ICU$Creatinine, show.col.prc = TRUE)
 sjt.xtab(ICU$Status, ICU$Consciousness, show.col.prc = TRUE)
 ```
 Statistically significant crosstabs include: Creatinine, Type, CPR, Infection,Renal, Service. 
-
+We will also conduct the Goodman Kruskall's Lambda test to measure the proportional reduction in error in the crosstabs conducted above. As we can see in the lambda calculation below, there is a weak association between the dependent and independent variable, as the lambda is higher than 0 but lower than 1, in which the latter would denote a strong relationship. 
 ```{r}
-ICUtable<-as.table(as.matrix(ICU))
-Lambda(ICU$Age.binned, ICU$Status, direction=c("symmetric", "row", "column"), conf.level = 0.95)
-Lambda(ICU$Service,ICU$Status, direction=c("symmetric", "row", "column"), conf.level=0.95)
-Lambda(ICU$Cancer, ICU$Status, direction=c("symmetric", "row", "column"), conf.level=0.95)
-Lambda(ICU$Previous, ICU$Status, direction=c("symmetric", "row", "column"), conf.level=0.95)
-Lambda(ICU$Type, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
-Lambda(ICU$Systolic.grouped, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
-Lambda(ICU$HeartRate.grouped, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
-Lambda(ICU$Consciousness, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
-Lambda(ICU$CPR, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
-Lambda(ICU$Infection, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
-Lambda(ICU$Sex, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
-Lambda(ICU$Renal, ICU$Status,direction=c("symmetric", "row", "column"), conf.level = 0.95)
+ICUtable<-as.table(cbind(c(ICU$Service, ICU$Cancer, ICU$Previous, ICU$Type, ICU$Age.binned, ICU$Systolic.grouped, ICU$HeartRate.grouped, ICU$Consciousness, ICU$CPR, ICU$Infection, ICU$Sex, ICU$Renal), c(ICU$Status)))
+Lambda(ICUtable, direction=c("symmetric", "row", "column"), conf.level = 0.95)
 ```
 ## Logistic Regression 
 In order to deduce the model that will predict the outcome of the status based on our chosen variables, we had decided to conduct a logistic regression, due to the fact that our respondent variable is binomial. 
@@ -1207,6 +1196,8 @@ plot_model(
   title = "Logistic Regression of State of Status using the Training Sample",
   show.p = TRUE
 )  + ylim(0, 800)
+
+#ICU.tr$fitted.values[6:10]
 ```
 
 With regards to the multicollinearity present within the model, according to the VIFs below, none are equal to 4, thus demonstrating the lack of multicollinarity in this model. 
@@ -1245,8 +1236,9 @@ regTermTest(ICU.tr, "Previous")
 ```
 Now that we have deduced that our model is indeed robust, we will now move on to deduce our classificantion and regression trees, based on our variables of interest.
 
-As we can see below, the variables of interest are age, systolic, service and type. Pruning the tree doesn't seem plausible, as the xerror is steady from lines 2 to 4 and our cp graph denotes a stable cp from size 3 to 7, while the mean acuracy for our regression tree is 0.88. 
+
 ## Classification and Regression Trees 
+As we can see below, the variables of interest are age, systolic, service and type. Pruning the tree doesn't seem plausible, as the xerror is steady from lines 2 to 4 and our cp graph denotes a stable cp from size 3 to 7, while the mean acuracy for our regression tree is 0.88. 
 ```{r}
 pacman::p_load(rpart, rpart.plot, rattle, dplyr)
 set.seed(2715)
