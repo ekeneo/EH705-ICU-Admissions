@@ -1119,7 +1119,7 @@ ICU <-
 })
 ```
 
-#The following code produces a crosstab of the proportions of Systolic (Hypotension, normal, elevated, 3 categories of hypertension) by Status (Lived or Died).
+The following code produces a crosstab of the proportions of Systolic (Hypotension, normal, elevated, 3 categories of hypertension) by Status (Lived or Died).
 ```{r}
 pacman::p_load(sjPlot)
 sjt.xtab(ICU$Status, ICU$Systolic.grouped, show.col.prc = TRUE)
