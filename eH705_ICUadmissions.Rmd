@@ -48,11 +48,6 @@ This report is created by Ekene Olatunji, Catherine Nassralla, Victoria Chin, Ba
 
 Using the principles taught during the eHealth 705 course, the ICU Admissions dataset was explored, analyzed and a logistic regression model was created. Logistic regression was used to create a model as the response variable, Status, was categorical, as were several of the predictor variables in this dataset. Using graphs, descriptive statistics and summaries, the attributes were analyzed and recoded if needed, as well as interpreted. Several of the attributes that were focused on related to patient characteristics at admission, as it might be valuable to understand features of an individual's medical situation that might make them more likely to survive or die during an ICU admission.
 
-(include reasons why we did tests, summary of what was found. )
-- overview of tests that we performed and some of the results
-- maybe include why we chose some of the tests
-- since the main predictor variable was vital status, most of the analyses and exploration was about this variable
-
 # About the ICU Admissions Dataset
 
 ## Description 
@@ -711,7 +706,7 @@ Since the p-value = 0.04162 for testing the homogeneity of variances is less tha
 leveneTest(Age ~ Infection, data=ICU, center="median")
 ```
 
-As the p-value = 0.02569, 0 is not within the confidence intervals of -11.6837808 to -0.7636741 and t = -2.2481 is less than -1.971957, we reject the null hypothesis at a 5% risk level of a type 1 error and conclude that the means for age are not the same between the two groups. this suggests that there may be a relationship between Age and Infection.
+As the p-value = 0.02569, 0 is not within the confidence intervals of -11.6837808 to -0.7636741 and t = -2.2481 is less than -1.971957, we reject the null hypothesis at a 5% risk level of a type 1 error and conclude that the means for age are not the same between the two groups. This suggests that there may be a relationship between Age and Infection.
 
 ```{r}
 t.test(Age~Infection, alternative="two.sided", conf.level=.95, var.equal=FALSE, data=ICU)
@@ -743,7 +738,7 @@ The following is the comparison of means and variances of Age by Consciousness.
 numSummary(ICU[,c("Age"), drop=FALSE], groups=ICU$Consciousness, statistics=c("mean","sd", "se(mean)"), quantiles=c(0,.25,.5,.75,1))
 ```
 
-__Testing normality__  
+__Testing Normality__  
 __H0__: the several distributions are normally distributed  
 __Ha__: the distributions are not normally distributed
 
