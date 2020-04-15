@@ -377,7 +377,7 @@ multiplot(f13, f14, f15, f16, layout=matrix(c(1:4), nrow=2, byrow=TRUE))
 
 **Observations**
 
-From the collection of graphs above, the most visually prominent chart is the relationship between vital status and Consciousness which shows that although there is a high count of patients who were conscious at admission, however most patients that were received at a stage of Deep Stupor or Coma lost consciousness and died.
+The most visually prominent chart from the last graph collection is the relationship between vital status and Consciousness which shows that although there is a high count of patients who were conscious at admission, however most patients that were received at a stage of Deep Stupor or Coma lost consciousness and died.
 
 
 # Uniform Distribution   
