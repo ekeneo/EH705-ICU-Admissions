@@ -46,12 +46,7 @@ This report is created by Ekene Olatunji, Catherine Nassralla, Victoria Chin, Ba
 
 # Executive Summary 
 
-Using the principles taught during the eHealth 705 course, the ICU Admissions dataset was explored, analyzed and a logistic regression model was created. Logistic regression was used to create a model as the response variable, Status, was categorical, as were several of the predictor variables in this dataset. Using graphs, descriptive statistics and summaries, the attributes were analyzed and recoded if needed, as well as interpreted. Several of the attributes that were focused on related to patient characteristics at admission, as it might be valuable to understand features of an individual's medical situation that might make them more likely to survive or die during an ICU admission.
-
-(include reasons why we did tests, summary of what was found. )
-- overview of tests that we performed and some of the results
-- maybe include why we chose some of the tests
-- since the main predictor variable was vital status, most of the analyses and exploration was about this variable
+The ICU Admissions dataset, containing information about 200 individuals admitted to an intensive care unit, was explored and analysed using principles taught during the eHealth 705 course. The response variable was Status, a categorical variable indicating whether individuals lived or died on ICU admission. The analysis of this dataset was focused on understanding factors that affected Status. The demographics of this dataset, such as race and age, were not balanced, limiting some of the generalizability of conclusions drawn from the analysis. Attributes that were explored in more detail include those that might be known about patients prior to admission and lab testing, which might help assess the risk of poor outcomes during ICU admission. This might guide allocation of resources and prioritizing patients, in cases where ICU resources might be strained. It might also help inform healthcare for higher risk individuals. These attributes included Service, Cancer, Previous, Type, Age, Systolic, HeartRate, Consciousness, CPR, Infection, Sex and Renal. Using a logistic regression model, the attributes Age, Cancer, Systolic, Type, Service, Previous, and Consciousness were found to be predictors of Status
 
 # About the ICU Admissions Dataset
 
