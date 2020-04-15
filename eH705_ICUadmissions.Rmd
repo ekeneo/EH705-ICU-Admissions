@@ -224,7 +224,7 @@ Using the xray package, general trends in the dataset were identified.
 
 4) While the numbers are roughly even, slightly more procedures were surgical. 
 
-5) More admitted patients had no chronic renal failure, no previous admissions to the ICU, fracture, CPR or cancer when admitted. Most admitted patients had  PO2 above or equal to 60, blood pH above or equal to 7.25, PCO2 below or equal to 45, and creatinine below or equal to 2. Much more of the observations were also white. Due to the large difference between groups some of these variables were not further explored, and the focus of exploratory data analysis and understanding of distribution was on variables where values might have been prior to admission. These might aid clinicians who work in the ICU in understanding the likelihood of survival for individuals who are admitted before lab work has been ordered.
+5) More admitted patients had no chronic renal failure, no previous admissions to the ICU, fracture, CPR or cancer when admitted. Most admitted patients had  PO2 above or equal to 60, blood pH above or equal to 7.25, PCO2 below or equal to 45, and creatinine below or equal to 2. Much more of the observations were also white. 
 
 6) Most patients admitted were conscious, with slighly more patients being comatose than in a deep stupor if unconscious. 
 
