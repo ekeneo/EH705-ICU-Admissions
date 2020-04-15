@@ -1508,29 +1508,6 @@ systolic_outlier$out
 heartrate_outlier$out
 ```
 
-
-# Crosstabs (relations between categorical variables)
-```{r}
-sjt.xtab(ICU$Status, ICU$Sex, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$Race, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$Service, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$Cancer, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$Renal, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$Infection, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$CPR, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$Previous, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$Type, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$Fracture, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$PO2, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$PH, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$PCO2, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$Bicarbonate, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$Creatinine, show.col.prc = TRUE)
-sjt.xtab(ICU$Status, ICU$Consciousness, show.col.prc = TRUE)
-```
-
-Statistically significant crosstabs include: Creatinine, Type, CPR, Infection,Renal, Service. 
-
 # Goodman Kruskall's Lambda 
 We will also conduct the Goodman Kruskall's Lambda test to measure the proportional reduction in error in the crosstabs conducted above. As we can see in the lambda calculation below, there is a weak association between the dependent and independent variable, as the lambda is higher than 0 but lower than 1, in which the latter would denote a strong relationship. 
 
@@ -1540,6 +1517,8 @@ Lambda(ICUtable, direction=c("symmetric", "row", "column"), conf.level = 0.95)
 ```
 ## Logistic Regression 
 In order to deduce the model that will predict the outcome of the status based on our chosen variables, we had decided to conduct a logistic regression, due to the fact that our respondent variable is binomial. 
+
+Our null hypothesis is that the coefficients are equal to 0, whereas our alternative hypothesis is that our coefficients are not equal to 0. 
 
 According to our logistic regression model below, statistically significant indicators include age, cancer, systolic blood pressure, type, service, previous and consciousness. The large enough difference between the null and residual deviance provides us with some confidence in our model, although our confidence intervals do not as they have 0 in them. However, before we state our model based on the calculations below, we will reduce our model to its significant predictors, and further investigate whether our model is sturdy. 
 
