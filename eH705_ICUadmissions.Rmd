@@ -46,7 +46,7 @@ This report is created by Ekene Olatunji, Catherine Nassralla, Victoria Chin, Ba
 
 # Executive Summary 
 
-The ICU Admissions dataset, containing information about 200 individuals admitted to an intensive care unit, was explored and analysed using principles taught during the eHealth 705 course. The response variable was Status, a categorical variable indicating whether individuals lived or died on ICU admission. The analysis of this dataset was focused on understanding factors that affected Status. The demographics of this dataset, such as race and age, were not balanced, limiting some of the generalizability of conclusions drawn from the analysis. Attributes that were explored in more detail include those that might be known about patients prior to admission and lab testing, which might help assess the risk of poor outcomes during ICU admission. This might guide allocation of resources and prioritizing patients, in cases where ICU resources might be strained. It might also help inform healthcare for higher risk individuals. These attributes included Service, Cancer, Previous, Type, Age, Systolic, HeartRate, Consciousness, CPR, Infection, Sex and Renal. Using a logistic regression model, the attributes Age, Cancer, Systolic, Type, Service, Previous, and Consciousness were found to be predictors of Status
+The ICU Admissions dataset, containing information about 200 individuals admitted to an intensive care unit, was explored and analysed using principles taught during the eHealth 705 course. The response variable was Status, a categorical variable indicating whether individuals lived or died on ICU admission. The analysis of this dataset was focused on understanding factors that affected Status. The demographics of this dataset, such as race and age, were not balanced, limiting some of the generalizability of conclusions drawn from the analysis. Attributes that were explored in more detail include those that might be known about patients prior to admission and lab testing, which might help assess the risk of poor outcomes during ICU admission. This might guide allocation of resources and prioritizing patients, in cases where ICU resources might be strained. It might also help inform healthcare for higher risk individuals. These attributes included Service, Cancer, Previous, Type, Age, Systolic, HeartRate, Consciousness, CPR, Infection, Sex and Renal. Using a logistic regression model, the attributes Age, Cancer, Systolic, Type, Service, Previous, and Consciousness were found to be predictors of Status.
 
 # About the ICU Admissions Dataset
 
@@ -79,7 +79,7 @@ Variable Names:
   20.	CRE: Creatinine from initial blood gases (0 = ²2.0, 1 = >2.0) 
   21.	LOC: Level of consciousness at admission (0 = no coma or stupor, 1= deep stupor, 2 = coma) 
 
-# Reading in the ICU Admissions Dataset
+## Reading in the ICU Admissions Dataset
 ```{r}
 ICU <- read.table("./ICUAdmissions.csv", header=TRUE, sep=",", na.strings="NA", dec=".", strip.white=TRUE)
 ```
@@ -1481,13 +1481,8 @@ With a proportion of 1, the Deep Stupor group had the highest proportion of pati
 From the tests of equal proportions, we note that Service (type of procedure), Type (of admission) and Conciousness had a statistically significant impact on the Vital status of patients. On the other hand, Sex, Infection, Renal, CPR, Cancer, Previous (ICU admission within the last 6 months), Age, Systolic Blood Pressure and Heart rate were not significant predictors of Vital status of patients.
 
 
-# Bassma
-
-## Detection of outliers of Int Variables 
-
-The following variables were not significant predictors of Vital status of the patient:  Cancer, Previous (ICU admission within the last 6 months), Age, Systolic Blood Pressure, Heart Rate and Race.
-
 # Detection of outliers of Int Variables 
+The following variables were not significant predictors of Vital status of the patient:  Cancer, Previous (ICU admission within the last 6 months), Age, Systolic Blood Pressure, Heart Rate and Race.
 
 ```{r}
 par(mfrow=c(1,3))
@@ -1495,6 +1490,7 @@ boxplot(ICU$Age, main="Boxplot of Age")
 boxplot(ICU$Systolic, main="Boxplot of Systolic Blood Pressure")
 boxplot(ICU$HeartRate, main="Boxplot of Heart Rate")
 ```
+
 As we can see above, the outliers are present in systolic blood pressure and heart rate. To see the values of the outliers, please see below, where the first row includes the outliers for systolic blood pressure, and the second includes outliers for heart rate.
 ```{r}
 systolic_outlier<-boxplot.stats(ICU$Systolic)
@@ -1533,7 +1529,8 @@ We will also conduct the Goodman Kruskall's Lambda test to measure the proportio
 ICUtable<-as.table(cbind(c(ICU$Service, ICU$Cancer, ICU$Previous, ICU$Type, ICU$Age.binned, ICU$Systolic.grouped, ICU$HeartRate.grouped, ICU$Consciousness, ICU$CPR, ICU$Infection, ICU$Sex, ICU$Renal), c(ICU$Status)))
 Lambda(ICUtable, direction=c("symmetric", "row", "column"), conf.level = 0.95)
 ```
-## Logistic Regression 
+
+# Logistic Regression 
 In order to deduce the model that will predict the outcome of the status based on our chosen variables, we had decided to conduct a logistic regression, due to the fact that our respondent variable is binomial. 
 
 According to our logistic regression model below, statistically significant indicators include age, cancer, systolic blood pressure, type, service, previous and consciousness. The large enough difference between the null and residual deviance provides us with some confidence in our model, although our confidence intervals do not as they have 0 in them. However, before we state our model based on the calculations below, we will reduce our model to its significant predictors, and further investigate whether our model is sturdy. 
@@ -1547,7 +1544,7 @@ exp(coef(ICU.m))
 
 
 
-### Final model 
+## Final model 
 As stated above, we wanted to reduce our model to a final model, based on its significant predictors. 
 
 As we can see below, the predictors are still significant, and the difference between the null and residual deviance are still large enough to provide us with some confidence in our model, while our confidence intervals still do not. However, this does not mean that we won't test the strength of our final model, which we will do below. 
@@ -1557,11 +1554,13 @@ summary(ICU.final.m)
 confint(ICU.final.m)
 exp(coef(ICU.final.m))
 ```
-### How strong is our model? 
+
+## How strong is our model? 
 We will assess our model by dividing it into training and testing samples. This way, we can assess how good our model is at predicting results in the testing sample, while also further scrutinizing our training and testing model. 
 
-### Testing & training the model 
-Below we have split our ICU dataset into training and testing datasets, with 150 observations in the former, and 50 in the latter. 
+## Testing & training the model 
+Below we have split our ICU dataset into training and testing datasets, with 150 observations in the former, and 50 in the latter.
+
 ```{r}
 pacman::p_load(rsample,DT)
 set.seed(78)
@@ -1573,6 +1572,7 @@ datatable(train)
 ```
 
 Below we have conducted a logistic regression on our training dataset, using the finalized coefficients that we have deduced above. We can observe below that intercept, age, cancer, consciousness, service, previous and type are statistically significant. However, systolic is no longer statistically significant. Yet, the large difference between the null and residual deviance leads us with some confidence in our model. 
+
 ```{r}
 ICU.tr<-glm(Status~Age.binned+Service+Cancer+Systolic.grouped+Previous+Consciousness+Type, family=binomial(logit),data=train)
 summary(ICU.tr)
@@ -1680,8 +1680,9 @@ rsq.rpart(icutree)
 
 ```
 
-### Classification tree built on training data 
+## Classification tree built on training data 
 Below is our classification tree built on our training data. While our tree has 3 branches, the X error rises from line 2 to line 3, indicating that our training regression tree needs to be pruned, which according to our cp plot is around 2 splits. 
+
 ```{r}
 icutree.train=rpart(Status~Service+Cancer+Previous+Type+Age.binned+Systolic.grouped+HeartRate.grouped+Consciousness+CPR+Infection+Sex+Renal, method="class", data=train, minsplit=20)
 fancyRpartPlot(icutree.train)
@@ -1696,8 +1697,9 @@ trainfit<-prune(icutree.train,cp=icutree.train$cptable[which.min(icutree.train$c
 fancyRpartPlot(trainfit, palettes = "YlOrRd" , caption=NULL  )
 ```
 
-###Prediction accuracy of our full model on training data
-According to our results below, the prediction accuracy based on training data is statistically significant, with an 87 percent accuracy for predicting lived and dead patients in the ICU. 
+## Prediction accuracy of our full model on training data
+According to our results below, the prediction accuracy based on training data is statistically significant, with an 87 percent accuracy for predicting lived and dead patients in the ICU.
+
 ```{r}
 tree.pred.train.full=predict(icutree.train, newdata=train, type="class")
 
@@ -1724,6 +1726,82 @@ rpart.rules(trainfit)
 
 Specifically, we should expect 13 percent to die based if consciousness is conscious, and 83 percent to die if consciousness is deep stupor or coma.  
 
+# DISCUSSION      
+
+## Exploratory Data Analysis     
+
+From initially examining the data set, a number of findings about the attributes(variables) and relationships were observed. We can deduce from initial exploration of the study that race of  most of the observations were White, the number of patients who lived and survived were higher than the population who died. More patients from the population who died were from age 50 and above for both male and female. The female population experienced more deaths than men of the same age bracket. The density plot peaked at age 75 for both male and female meaning more patients died at age 75. The relationship between vital status and consciousness shows that although there is a high count of patients who were conscious at admission, most patients that were received at a stage of deep stupor or coma lost consciousness and died.      
+
+Furthermore, most admitted patients had no chronic renal failure, no previous admissions to the ICU, fracture, CPR or cancer when admitted. Also most admitted patients had PO2 above or equal to 60, blood pH above or equal to 7.25, PCO2 below or equal to 45, and creatinine below or equal to 2. Due to the large difference between groups some of these variables were not further explored, and the focus of exploratory data analysis and understanding of distribution was on variables where values might have been prior to admission. These might aid clinicians who work in the ICU in understanding the likelihood of survival for individuals who are admitted before lab work has been ordered.      
+
+Additionally, large differences in gender and race, may limit how applicable this data set is to the general population. The frequency of type of admissions was unclear as the circumstances of admission to ICU in an elective setting can either be proactive or as a result of an emergency during surgery. More individuals who were elderly were admitted on an elective basis. It is unclear whether this meant they were proactively admitted due to fear of complication or complications occurred during treatment on an elective basis. Clarification of these two levels might provide more insight into how this attribute contributes to status. The distribution of age has two peaks which limits the value of the mean when looking at the whole dataset. This distribution might have affected other attribute counts, where there was often a peak at about 20 and a larger peak around 70 years of age. We investigate these findings further by taking a closer look at the distribution and associations.     
+
+## Relationships      
+
+### Distribution of Attributes          
+
+Most of the attributes explored further had non-uniform distribution, indicating larger/ significant differences in categories. Infection was narrowly significantly non-uniform - future research may show that infection might not disproportionately affect individuals admitted to ICU. More men than women were included in this dataset but it is unclear if that is an accurate distribution for people who are admitted to an ICU.       
+
+Statistically, all three numeric variables were non-normal. HeartRate and Systolic seemed to be normal based on quantile-quantile plots, but this conclusion was rejected based on the Shapiro-Wilk (SW) test.  Given that the SW test can detect small effects in larger datasets, it is unclear whether this is an accurate conclusion to draw. Additionally, as per the central limit theorem, essentially all three of these distributions could be normal with repeated sampling. Therefore, normality testing did not add to the insights that could be drawn from this dataset.        
+
+
+### Associations with Numeric Attributes     
+
+#### Age       
+
+Many of the attributes explored were more frequent with advancing age, which might be expected as the risk of cancer and comorbidity become higher as people age. This was further supported when comparing differences in means for age with the various variables. Statistically significant differences in means for age were found for infection, vital status, ICU admission, type of admission and history of chronic renal failure. While these statistically significant findings may suggest that there is a link to age, further analysis is required to assess whether the relationships are statistically significant.      
+
+Surgical service peaks at a younger age, indicating the conditions that result in admissions from this group might have been acute and accident related rather than related to a medical condition. Based on plots of sex by age, it might be concluded that more females who were older were admitted to the ICU as compared to males. Based on plots of status by sex, a higher frequency of deaths occurred in advancing age, a conclusion that seems reasonable as individuals become frail, require surgery or are diagnosed with other medical conditions, including cancer.       
+
+Additionally, through the difference of proportions test, although age was not statistically significant by accordance of the p-value, the proportion numbers show that the number of patients that died in the two youngest age groups is much lower than the rest and the greatest proportion of deaths was in the oldest age group. It is logical that age would be a predictor of vital status, especially in an ICU.      
+
+When status was examined with status and sex, it was found that more older women were admitted to the ICU and older women also died more often during ICU admission. There was a similar frequency of older men who lived and died, with more men dying with older age.      
+
+
+### Associations with Numeric Attributes       
+
+#### HeartRate       
+
+The distribution of this attribute shows a second peak at 130 bpm in addition to a primary peak at about 90 bpm, which would be considered a normal heart rate. When examined by status, there seemed to be more deaths as heart rate increased. Whether this is related to the reason for admission or to the anxiety of having a medical emergency and whether elevated heart rate contributed to death is unclear. Despite these observations, when assessing for differences in means, there was no statistical difference between the two status groups nor was there a statistical significance in terms of proportions between vital status and heart rate.     
+
+
+### Associations with Numeric Attributes       
+
+#### Systolic       
+
+This attribute seems to be visually normally distributed, a conclusion that was rejected when testing for normality, albeit narrowly. When examined by status, there are two peaks at 75 and 140mmHg among those who died. This suggests that hypotension and hypertension may have contributed to death during admission. This could be related to a bleed, sepsis or even dehydration in hypotension and stress, hypertension or hypertensive crisis with higher readings. Critical care often involves the use of vasopressors to increase blood pressure and perfusion to manage hypotension.  When means were examined, there was a statistically significant difference in means for status by systolic blood pressure. As this dataset did not include any history about these patients, conclusions cannot be made about what conditions could have resulted in these readings on admission.      
+
+Systolic blood pressure was also found to be statistically significant through the difference in proportions test. It was found that the hypotension group had a much higher proportion of patient deaths in comparison to the other systolic blood pressure categories. Again, this is an understandable predictor due to the life threatening nature of some of the potential causes of hypotension.      
+
+## Differences in Proportions for Categorical Attributes         
+
+From the tests of equal proportions, we note that whether patients were receiving medical or surgical service at ICU admission was a statistically significant predictor of the vital status of the patient. The proportions of patients that died was higher for those that were there for a medical service was higher than those there for a surgical service. This makes sense since more patients in the ICU for a medical service could be admitted due to a life threatening emergency than those in the ICU for surgery, who are often scheduled to be admitted in advance. Thus, this could explain the higher death rate in medical service receivers in comparison to surgery receivers.      
+
+We also found that type of admission was a significant predictor of vital status in ICU patients, when conducting equal proportions tests. Patients that were admitted due to an emergency had a higher rate of death than those admitted electively. Again, this is understandable since patients admitted in an emergency would likely be in life-threatening condition and, thus, would be more likely to die than those who are scheduled to be admitted to the ICU.      
+
+The third variable we found to be a statistically significant predictor of vital status upon conducting the equal proportions tests was the patient’s level of consciousness at admission. Those who had a deep stupor upon admission were the highest proportion of patients to die, with all patients with a deep stupor dying in the ICU. Those who had a coma had a 80% death rate and those who had no stupor or coma had the lowest rate of death, which makes sense. It is interesting that the deep stupor group had a higher death rate since they had less patients in that group than the coma group and a coma is considered to be more medically severe than a deep stupor, thus you would expect the coma group to have a higher proportion of deaths.       
+
+On the other hand, sex, infection at admission, a history of chronic renal failure, the reception of CPR upon admittance, a cancer diagnosis and prior ICU admission within the last 6 months were not deemed to be significant predictors of the vital status of patients. It is important to note that the dataset includes more males than females, which reduces the integrity of the proportions test on sex and vital status.      
+
+Additionally, we thought it was interesting that infection at admission, a history of chronic renal failure, cancer and prior ICU admission were not significant predictors. But we concluded that it would depend on the severity of the patient’s condition.       
+
+Lastly, we also followed up our results with a Goodman Kruskall’s Lambda analysis, and found that while the relationship between the predictors we focused on and the response variable was not 0 as it was approximately 0.25, it also was not 1 therefore denoting a somewhat weak relationship.       
+
+## Logistic Regression      
+
+When we conducted a logistic regression, the statistically significant indicators that were found included age, cancer, systolic blood pressure, type, service, previous, and consciousness. However, when the logistic regression was conducted on our training and testing sample, we found systolic was no longer significant. With regards to determining how good our model was, we used the null model; due to the fact that it was found to be significant, it  therefore denoted that our model is worth pursuing. With regards to determining the importance of the predictors within our model, the Wald Test found that consciousness, systolic blood pressure, type, age and service to be significant predictors within the model.       
+Our final model deduced was 
+Status=(1.118927e-03)+(6.130498e+00) Age.binnedGroup4+(1.025275e+01)Age.binnedGroup5+(3.130311e-01)ServiceSurgical+(2.183970e+01)CancerYes+(6.624874e+00)PreviousYes+(3.463936e+01)ConsciousnessComa+(2.575717e+01)TypeEmergency       
+
+## Possibility of survival based on classification and regression trees         
+
+In both our original classification and regression tree and our finalized classification and regression tree based on our training data, consciousness was a key player in a patient’s status. Whereas systolic, type, age and service were key categories in the classification and regression tree conducted on the original dataset, our training dataset required pruning, which eliminated all branches but consciousness and maintained an accuracy of approximately 87 percent.       
+
+## Comments regarding our dataset & analysis       
+
+Due to the difference in results between the classification and regression trees with both the training data and the original dataset, along with the difference in models in both the training data and original dataset, there is doubt that both our models and dataset are representative of true “cases” observed within a typical ICU unit, not to mention other anomalies present within our data as previously mentioned. Furthermore, we attempted to deduce a logistic regression based on historical variables, which also contributed to our unique results.       
+
 # Conclusion
 
 Our analysis on the relationship between variables related to patient history and status within the ICU. Common predictors that were found to be statistically significant and thus pertinent, among all tests include systolic, service, and consciousness. Recommendations include conducting the study on a more diverse population with a large number of observations, along with more research to be conducted on the systolic blood pressure, type of service and consciousness on status within an ICU stay. 
+
