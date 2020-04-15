@@ -1726,7 +1726,7 @@ rpart.rules(trainfit)
 
 Specifically, we should expect 13 percent to die based if consciousness is conscious, and 83 percent to die if consciousness is deep stupor or coma.  
 
-# DISCUSSION      
+# Discussion     
 
 ## Exploratory Data Analysis     
 
